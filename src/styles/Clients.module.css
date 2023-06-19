@@ -1,0 +1,6 @@
+.assignees {
+  width: 200px;
+  margin: auto;
+  display: flex;
+  text-align: left;
+}

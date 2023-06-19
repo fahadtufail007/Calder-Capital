@@ -1,0 +1,76 @@
+.sidebar {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  justify-content: space-between;
+  overflow: auto;
+  height: 100vh;
+  background-color: var(--metalic-blue-color);
+}
+.sideNav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 50px;
+  margin-left: -40px;
+}
+.sideNavItem,
+.sideNavItemActive {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0px 12px 40px;
+  border-radius: 35px 0px 0px 0px;
+  transition: all 0.2s;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: var(--white-color);
+}
+
+.sideNavItem:hover,
+.sideNavItemActive {
+  background-color: var(--white-color);
+  color: var(--pearl-black-color);
+}
+.sidebarLogoWrapper {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px;
+  gap: 12px;
+  border-bottom: 1px solid var(--light-periwinkle-color);
+}
+.sidebarCode {
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 29px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: var(--white-color);
+}
+.logoutButtton {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 30px 40px;
+  background-color: var(--pearl-black-color);
+}
+.logout {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: var(--white-color);
+}
+.links {
+  text-decoration: none;
+}

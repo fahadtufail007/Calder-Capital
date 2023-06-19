@@ -1,0 +1,6 @@
+.viewProfile {
+  color: var(--light-grey-color);
+}
+.viewProfile:hover {
+  color: var(--light-grey-color);
+}

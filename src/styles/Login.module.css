@@ -1,0 +1,61 @@
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.leftSide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+}
+.rightSide {
+  background-color: var(--metalic-blue-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+}
+.code {
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 29px;
+  letter-spacing: 0em;
+  text-align: right;
+  margin-top: -10px;
+  color: var(--metalic-blue-color);
+}
+.loginForm {
+  background-color: var(--white-color);
+  padding: 80px 40px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 38px;
+  width: 440px;
+}
+.login {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-bottom: 60px;
+  color: var(--dark-blue-color);
+}
+.rememberMe {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0em;
+  text-align: left;
+  color: var(--grey-color);
+  margin-top: 2px;
+}
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 50px;
+  margin-top: -10px;
+}

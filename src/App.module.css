@@ -1,0 +1,29 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+.app {
+  height: 100vh;
+}
+
+:root {
+  --light-periwinkle-color: #c5c8ff;
+
+  --red-color: #ff0000;
+
+  --pearl-black-color: #141924;
+  --black-color: #000;
+
+  --metalic-blue-color: #4e778a;
+  --dark-blue-color: #2c374f;
+
+  --ghost-white-color: #f6f6ff;
+  --ofwhite-color: #c8c8c8;
+  --white-color: #ffff;
+
+  --opacity-grey-color: rgba(78, 119, 138, 0.08);
+  --light-grey-color: #3b3d43;
+  --dark-grey-clor: #d9d9d9;
+  --grey-color: #a6aab4;
+}

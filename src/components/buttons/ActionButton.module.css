@@ -1,0 +1,18 @@
+.buttonContainer {
+  border-radius: 10px;
+  height: 35px;
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid var(--ofwhite-color);
+}
+.buttonTitle {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: var(--light-grey-color);
+}

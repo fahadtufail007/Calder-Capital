@@ -1,0 +1,33 @@
+.revenuesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding: 25px 70px 20px 0px;
+}
+.revenueCards {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.userName {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: var(--light-grey-color);
+}
+.userEmail {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-top: 5px;
+  color: var(--light-grey-color);
+}
+.earningsButtonWrapper {
+  margin-top: 40px;
+  width: 170px;
+}

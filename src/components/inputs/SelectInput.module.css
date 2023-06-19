@@ -1,0 +1,72 @@
+.container {
+  width: 300px;
+  padding: 20px;
+  margin: 0 auto;
+}
+.didFloatingLabelContent {
+  position: relative;
+}
+.didFloatingLabel {
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 12px;
+  top: 12px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+  color: #757575;
+  padding: 0 5px;
+  background: var(--white-color);
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.didFloatingSelect {
+  border: 1px solid var(--grey-color);
+  display: block;
+  width: 100%;
+  height: 45px;
+  padding: 0 15px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+  color: var(--dark-blue-color);
+  box-shadow: 0 0 0 30px white inset !important;
+}
+
+.didFloatingSelect:focus {
+  border: 1px solid var(--dark-blue-color);
+  outline: none;
+}
+
+.didFloatingLabel.floating {
+  color: var(--dark-blue-color);
+  top: -11px;
+  font-size: 13px;
+  font-weight: 700;
+  display: block;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+.span {
+  color: var(--red-color);
+}
+
+select.didFloatingSelect {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.didFloatingSelect:not([multiple]):not([size]) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'%3E%3Cpath id='Path_1' data-name='Path 1' d='M371,294l4,6,4-6Z' transform='translate(-371 -294)' fill='%23003d71'/%3E%3C/svg%3E%0A");
+  background-position: right 15px top 50%;
+  background-repeat: no-repeat;
+}

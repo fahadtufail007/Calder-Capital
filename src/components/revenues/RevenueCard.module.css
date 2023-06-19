@@ -1,0 +1,28 @@
+.revenueCardContainer {
+  border: 1px solid var(--opacity-grey-color);
+  padding: 12px 20px;
+  border-radius: 10px;
+  width: 200px;
+}
+.totalRevenueWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.revenueText {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 0px;
+  text-align: left;
+  color: var(--metalic-blue-color);
+}
+.revenuePrice {
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 30px;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-top: 5px;
+  color: var(--pearl-black-color);
+}
