@@ -6,10 +6,23 @@ const SelectInput = ({ children, setSelected, selected }) => {
 
   const handleOptionChange = (event) => {
     var index = event.nativeEvent.target.selectedIndex;
-    setSelected(
-      {
-        ...selected, [event.target.value]: event.nativeEvent.target[index].text
-      });
+    setSelected((prevState) => {
+      const isObjectPresent = prevState.some((obj) => obj.key === event.target.value);
+    
+      if (isObjectPresent || event.target.value === "") {
+        return prevState; // Object already exists, return the previous state
+      } else {
+        return [
+          ...prevState,
+          {
+            key: event.target.value,
+            value: event.nativeEvent.target[index].text,
+            commission: 6,
+          },
+        ];
+      }
+    });
+
   };
 
   return (

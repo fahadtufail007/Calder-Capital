@@ -1,8 +1,12 @@
 import React from "react";
 import { ActionButton } from "..";
 import styles from "./Table.module.css";
+import styles1 from "../../styles/Clients.module.css";
+// import style1 from '../../styles/'
 
-const Table = ({ onClick, title, headings, data }) => {
+
+const Table = ({  title, headings, data, setIsEditted }) => {
+  // console.log("ee", data);
   return (
     <div className={styles.scrollTable}>
       <table className={styles.GeneratedTable}>
@@ -15,16 +19,38 @@ const Table = ({ onClick, title, headings, data }) => {
         </thead>
 
         <tbody>
-          {data.map((el) => (
+          {data.map((el) => {
+            return (
             <tr>
-              {Object.keys(el).map((key) => (
-                <td>{el[key]}</td>
-              ))}
+              {Object.keys(el).map((key) => {
+                if (key==='assigned') {
+                  const array = []
+                  el[key].forEach(element => {
+                    array.push(element.value)
+                  });
+                  return (
+                    <td>
+                    <div className={styles1.assignees}>
+                      {array.join(', ')}
+                    </div>
+                    </td>
+                  )
+                } else {
+                  return (<td>{el[key]}</td>)
+                }
+                })}
               <td>
-                <ActionButton title={title} onClick={onClick} />
+                <ActionButton title={title} 
+                // onClick={onClick} 
+                onClick={() => {
+                  setIsEditted(el)
+                  document.getElementById("modalId").click()
+                }}
+
+                />
               </td>
             </tr>
-          ))}
+          )})}
         </tbody>
       </table>
     </div>

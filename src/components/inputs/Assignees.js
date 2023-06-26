@@ -3,24 +3,31 @@ import styles from "./Assignees.module.css";
 
 import closeIcon from "../../assets/svgs/close-icon.svg";
 
-const Assignees = ({value, setSelected}) => {
+const Assignees = ({option, setSelected, payment}) => {
+  // console.log("DJFF", option);
   const handleDelete = () =>{
-    setSelected(prevState => {
-      const newState = { ...prevState };
-      delete newState[value[0]];
-      return newState;
-    });
+    setSelected(prevData => prevData.filter(item => item.id !== option.id))
   }
+  const onCommissionChange = (e) => {
+    setSelected(prevState => {
+      return prevState.map(obj => {
+        if (obj.id=== option.id) {
+          return {...obj, commission: e.target.value};
+        }
+        return obj;
+      });
+    })
+  }
+  const commissionAmmount = (payment * option.commission * 0.01) + payment 
   return (
     <div className={styles.assigneesWrapper}>
-      <div className={styles.assigneeName}>{value[1]}</div>
+      <div className={styles.assigneeName}>{option.value}</div>
       <div className={styles.commissionWrapper}>
         <div className={styles.assigneeCommission}>
-          Commission: <span className={styles.commissionPrice}>$1200</span>
+          Commission: {payment && <span className={styles.commissionPrice}>${parseInt(commissionAmmount).toFixed(2)}</span>}
         </div>
-        <div className={styles.commissionButton}>5</div>
+        <input className={styles.commissionButton} value={option.commission} type="number" onChange={onCommissionChange}/>
         <div className={styles.percentageCommission}>%</div>
-
         <img className={styles.closeIcon} src={closeIcon} alt="icon"  onClick={handleDelete} />
       </div>
     </div>

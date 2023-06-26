@@ -30,14 +30,26 @@
 
 .commissionButton {
   border: 1px solid var(--grey-color);
-  width: 30px;
+  width: 35px;
   height: 30px;
+  padding-left: 9px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0px 10px;
 }
+.assigneeCommission > input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.assigneeCommission > input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
 .percentageCommission {
   font-size: 14px;
   font-weight: 400;

@@ -4,7 +4,7 @@ import styles from "./Modal.module.css";
 
 import Button from "../buttons/Button";
 
-const Modal = ({ children, modalTitle }) => {
+const Modal = ({ children, modalTitle , onClick, disable}) => {
   return (
     <div>
       <button
@@ -37,6 +37,8 @@ const Modal = ({ children, modalTitle }) => {
                     radius="10px"
                     size="15px"
                     height="36px"
+                    onClick={onClick}
+                    disabled={disable}
                   />
                 </div>
               </div>

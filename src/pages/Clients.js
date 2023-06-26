@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/Clients.module.css";
 
 import {
@@ -9,15 +9,56 @@ import {
   SelectInput,
   Assignees,
 } from "../components";
+import { useDispatch } from "react-redux";
+import { addClient } from "../store/thunk/client.thunk";
+import {  useSelector } from "react-redux/es/hooks/useSelector";
 
 const Clients = () => {
-  const [selectedOption, setSelectedOption] = useState({});
+  const assignedToOptions = useSelector(state=> state.client.assignedTo)
+  const data = useSelector(state=> state.client.data)
+
+  const [selectedOption, setSelectedOption] = useState([]);
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isEditted, setIsEditted] = useState({});
+  const dispatch = useDispatch()
+
+  const validateForm = () => {
+    const emailRegex = /^\S+@\S+\.\S+$/; // Regular expression for email format
+  
+    // Perform your validation checks here
+    const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
+    const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
+    const isEmailValid = emailRegex.test(email); // Check if email matches the email format
+    const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
+  
+    const isValid = isFirstNameValid && isLastNameValid && isEmailValid && isSelectedOptionValid;
+    setIsButtonDisabled(!isValid);
+  };
+
+  const handleCreate = () => {
+    dispatch(addClient({selectedOption, firstName, lastName, email}))
+  }
+
+  useEffect(() => {
+    validateForm();
+    if (Object.keys(isEditted).length) {
+      // console.log("ele",isEditted.length);
+      const [firstName, lastName] = isEditted['name'].split(' ')
+      setFirstName(firstName)
+      setLastName(lastName)
+      setEmail(isEditted['email'])
+      setSelectedOption(isEditted['assigned'])
+      setIsEditted("")
+    }
+  }, [firstName, lastName, email, selectedOption, isEditted]);
+
+  // console.log("TY", isEditted);
   return (
     <div className={styles.clientsContainer}>
-      <Modal modalTitle="Add New Client">
+      <Modal modalTitle="Add New Client" onClick={handleCreate} disable={isButtonDisabled}>
         <TextInput
           label="First Name"
           star="*"
@@ -43,14 +84,10 @@ const Clients = () => {
           setValue={setEmail}
         />
         <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
-          <option value="1">Abdullah</option>
-          <option value="2">Asad</option>
-          <option value="3">Usman</option>
-          <option value="4">Ali</option>
-          <option value="5">Ahmad</option>
+          {assignedToOptions.map(option => <option value={option.id}>{option.value}</option>)}
         </SelectInput>
-        {Object.entries(selectedOption).map((value)=>{
-          return <Assignees value={value} setSelected={setSelectedOption} />
+        {selectedOption.map((option)=>{
+          return <Assignees key={option.key}  option={option} setSelected={setSelectedOption} />
         })}
 
       </Modal>
@@ -60,30 +97,10 @@ const Clients = () => {
       />
       <Table
         headings={["Name", "Email", "Date Updated", "Assigned To", "Actions"]}
-        data={[
-          {
-            name: "John Doe",
-            email: "johndoe247340@gmail.com",
-            date: "May 3, 2023",
-            assigned: (
-              <div className={styles.assignees}>
-                Abdullah, Rameez, Asad, Faiqa, Faryal, Ushna
-              </div>
-            ),
-          },
-          {
-            name: "John Doe",
-            email: "johndoe247340@gmail.com",
-            date: "May 3, 2023",
-            assigned: (
-              <div className={styles.assignees}>
-                Abdullah, Rameez, Asad, Faiqa, Faryal, Ushna
-              </div>
-            ),
-          },
-        ]}
+        data={data}
         title="Edit"
-        onClick={() => document.getElementById("modalId").click()}
+        setIsEditted={setIsEditted}
+        // onClick={() => document.getElementById("modalId").click()}
       />
     </div>
   );
