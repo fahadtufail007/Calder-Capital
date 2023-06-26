@@ -10,19 +10,19 @@ const Modal = ({ children, modalTitle }) => {
       <button
         id="modalId"
         type="button"
-        class="btn btn-primary"
+        className="btn btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
         style={{ display: "none" }}
       />
       <div
-        class="modal fade"
+        className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
             <div className="modal-body">
               <div className={styles.modaHeader}>
                 <div className={styles.modalTitle}>{modalTitle}</div>

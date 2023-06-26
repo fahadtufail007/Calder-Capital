@@ -10,8 +10,14 @@ import {
   SelectInput,
   Assignees,
 } from "../components";
+import { useState } from "react";
 
 const Payments = () => {
+  const [selectedOption, setSelectedOption] = useState({});
+  const [name, setName] = useState("")
+  const [date, setDate] = useState("")
+  const [email, setEmail] = useState("")
+
   return (
     <div className={styles.paymentsContainer}>
       <Modal modalTitle="Add New Payment">
@@ -20,6 +26,8 @@ const Payments = () => {
           star="*"
           placeholder="Client Name"
           type="text"
+          value={name}
+          setValue={setName}
         />
         <TextInput label="Payment" star="*" placeholder="Payment" type="text" />
         <TextInput
@@ -27,15 +35,20 @@ const Payments = () => {
           star="*"
           placeholder="Date Range"
           type="date"
+          value={date}
+          setValue={setDate}
         />
-        <SelectInput>
+        <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
           <option value="1">Asad</option>
           <option value="2">Usman</option>
           <option value="3">Ali</option>
           <option value="4">Ahmad</option>
           <option value="5">Khan</option>
         </SelectInput>
-        <Assignees />
+        {Object.entries(selectedOption).map((value)=>{
+          return <Assignees value={value} setSelected={setSelectedOption} />
+        })}
+
       </Modal>
       <AddNewButton
         title="Add New Payment"

@@ -5,7 +5,7 @@ import dropdownIcon from "../../assets/svgs/dropdown-icon.svg";
 
 const ActionButton = ({ onClick, title }) => {
   return (
-    <div class="dropdown">
+    <div className="dropdown">
       <div
         id="dropdownMenuButton1"
         data-bs-toggle="dropdown"
@@ -15,14 +15,14 @@ const ActionButton = ({ onClick, title }) => {
         <img src={dropdownIcon} alt="icon" />
       </div>
 
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+      <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         <li>
-          <button onClick={onClick} class="dropdown-item">
+          <button onClick={onClick} className="dropdown-item">
             {title}
           </button>
         </li>
         <li>
-          <button class="dropdown-item">Delete</button>
+          <button className="dropdown-item">Delete</button>
         </li>
       </ul>
     </div>

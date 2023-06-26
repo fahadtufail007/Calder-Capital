@@ -11,15 +11,10 @@ import {
 } from "../components";
 
 const Clients = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
-  const handleClearSelection = () => {
-    setSelectedOption(null);
-  };
+  const [selectedOption, setSelectedOption] = useState({});
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [email, setEmail] = useState("")
   return (
     <div className={styles.clientsContainer}>
       <Modal modalTitle="Add New Client">
@@ -27,29 +22,37 @@ const Clients = () => {
           label="First Name"
           star="*"
           placeholder="First Name"
-          type="text"
+          type="search"
+          setValue={setFirstName}
+          value={firstName}
         />
         <TextInput
           label="Last Name"
           star="*"
           placeholder="Last Name"
           type="text"
+          setValue={setLastName}
+          value={lastName}
         />
         <TextInput
           label="Email Address"
           star="*"
           placeholder="Email Address"
           type="email"
+          value={email}
+          setValue={setEmail}
         />
-        <SelectInput>
+        <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
           <option value="1">Abdullah</option>
           <option value="2">Asad</option>
           <option value="3">Usman</option>
           <option value="4">Ali</option>
           <option value="5">Ahmad</option>
         </SelectInput>
+        {Object.entries(selectedOption).map((value)=>{
+          return <Assignees value={value} setSelected={setSelectedOption} />
+        })}
 
-        <Assignees selectedOption={selectedOption} />
       </Modal>
       <AddNewButton
         title="Add New Client"

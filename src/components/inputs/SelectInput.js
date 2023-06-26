@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import styles from "./SelectInput.module.css";
 
-const SelectInput = ({ children }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+const SelectInput = ({ children, setSelected, selected }) => {
+
 
   const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+    var index = event.nativeEvent.target.selectedIndex;
+    setSelected(
+      {
+        ...selected, [event.target.value]: event.nativeEvent.target[index].text
+      });
   };
 
   return (
@@ -13,17 +17,17 @@ const SelectInput = ({ children }) => {
       <div className={styles.didFloatingLabelContent}>
         <select
           className={styles.didFloatingSelect}
-          value={selectedOption}
+          value={selected.key}
           onChange={handleOptionChange}>
           <option value=""></option>
           {children}
         </select>
         <label
           className={`${styles.didFloatingLabel} ${
-            selectedOption ? styles.floating : ""
+            selected ? styles.floating : ""
           }`}>
           Assign To{" "}
-          {selectedOption ? <span className={styles.span}>*</span> : ""}
+          {selected ? <span className={styles.span}>*</span> : ""}
         </label>
       </div>
     </>

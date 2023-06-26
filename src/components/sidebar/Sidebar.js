@@ -13,13 +13,13 @@ import { Link, useLocation } from "react-router-dom";
 const Sidebar = () => {
   const location = useLocation();
   return (
-    <nav class={styles.sidebar}>
+    <nav className={styles.sidebar}>
       <div>
         <div className={styles.sidebarLogoWrapper}>
           <div className={styles.sidebarCode}>1099COMP</div>
           <img src={menuIcon} alt="icon" />
         </div>
-        <ul class={styles.sideNav}>
+        <ul className={styles.sideNav}>
           <Link to="/clients" className={styles.links}>
             <li
               className={
