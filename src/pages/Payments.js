@@ -22,7 +22,8 @@ import {  useSelector } from "react-redux/es/hooks/useSelector";
 const Payments = () => {
   const assignedToOptions = useSelector(state=> state.client.assignedTo)
   // const assignedToOptions = useSelector(state=> state.client.assignedTo)
-  const data = useSelector(state=> state.client.data)
+  const [isEditted, setIsEditted] = useState({});
+  const data = useSelector(state=> state.payment.data)
   const [selectedOption, setSelectedOption] = useState([]);
   const [name, setName] = useState("")
   const [dateStart, setDateStart] = useState("")
@@ -33,6 +34,7 @@ const Payments = () => {
   const dispatch = useDispatch()
   const handleCreate = () => {
     dispatch(addPayment({selectedOption, name, dateStart, dateEnd}))
+
   }
 
 
@@ -53,7 +55,19 @@ const validateForm = () => {
 
 useEffect(() => {
   validateForm();
-}, [name, dateStart, dateEnd, selectedOption]);
+  if (Object.keys(isEditted).length) {
+    const [dateStart, dateEnd] = isEditted['date'].split("-")
+    console.log("JJWE",parseInt(isEditted['payment'].split(' ')[1]));
+    setDateStart(dateStart)
+    setDateEnd(dateEnd)
+    setName(isEditted['name'])
+    setPayment(isEditted['payment'].split(' ')[1])
+
+    setDateEnd(isEditted['date'])
+    setPayment(isEditted['amount'])
+    setIsEditted("")
+  }
+}, [name, dateStart, dateEnd, selectedOption, isEditted]);
 
   return (
     <div className={styles.paymentsContainer}>
@@ -112,7 +126,9 @@ useEffect(() => {
         ]}
         data={data}
         title="Edit"
-        onClick={() => document.getElementById("modalId").click()}
+        setIsEditted={setIsEditted}
+
+        // onClick={() => document.getElementById("modalId").click()}
       />
       <div className={styles.paymentButtonWrapper}>
         <Button title="Download in CSV" radius="16px" size="13px" />

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 // import styles from "../styles/Clients.module.css";
-
+import { getClients } from '../thunk/client.thunk';
 // import { loginAction } from '../thunk/login.thunk';
 
 const initialState = {
@@ -50,12 +50,12 @@ export const clientReducer = createSlice({
       state.user = 2001;
     },
   },
-//   extraReducers: {
-//     [loginAction.fulfilled]: (state, { payload }) => {
-//       state.user = payload;
-//       state.logedIn = true;
-//     },
-//   },
+  extraReducers: {
+    [getClients.fulfilled]: (state, { payload }) => {
+      state.data = payload;
+      // state.logedIn = true;
+    },
+  },
 });
 
 export const { logOut, adminLogout } = clientReducer.actions;

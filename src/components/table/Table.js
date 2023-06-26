@@ -19,14 +19,14 @@ const Table = ({  title, headings, data, setIsEditted }) => {
         </thead>
 
         <tbody>
-          {data.map((el) => {
+          {data?.map((el) => {
             return (
             <tr>
-              {Object.keys(el).map((key) => {
+              {Object.keys(el)?.map((key) => {
                 if (key==='assigned') {
                   const array = []
                   el[key].forEach(element => {
-                    array.push(element.value)
+                    array.push(element?.value)
                   });
                   return (
                     <td>

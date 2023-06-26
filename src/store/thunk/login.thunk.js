@@ -1,10 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getClients } from "./client.thunk";
 import axios from "axios";
 
 export const loginAction = createAsyncThunk(
     "users/login",
-    async ({ values, navigate }) => {
+    async ({ values, navigate, thunkAPI }) => {
+
       try {
+
         navigate("/clients")
 
         const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth`, values);
@@ -14,22 +17,28 @@ export const loginAction = createAsyncThunk(
         // localStorage.setItem("Id", res.data._id);
         // toast.success("Successfull loged in");
         // if (res.data == 5150) navigate("/admin");
-        return res?.data;
+        const data = await res.json();
+        thunkAPI.dispatch(getClients());
+
+
+        // Access the dispatch function from thunkAPI
+        return data;
       } catch (error) {
+
         console.error(error);
       }
     }
   );
-  export const signup = createAsyncThunk(
-    "signup",
-    async ({ values, setSubmitting }) => {
-      try {
-        const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, values);
-        setSubmitting(false);
-        // toast.success("Sucessfully Signed up!");
-        return res?.data;
-      } catch (error) {
-        setSubmitting(false);
-      }
-    }
-  );
+  // export const signup = createAsyncThunk(
+  //   "signup",
+  //   async ({ values, setSubmitting }) => {
+  //     try {
+  //       const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, values);
+  //       setSubmitting(false);
+  //       // toast.success("Sucessfully Signed up!");
+  //       return res?.data;
+  //     } catch (error) {
+  //       setSubmitting(false);
+  //     }
+  //   }
+  // );

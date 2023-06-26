@@ -32,14 +32,14 @@ const Clients = () => {
     const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
     const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
     const isEmailValid = emailRegex.test(email); // Check if email matches the email format
-    const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
+    // const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
   
-    const isValid = isFirstNameValid && isLastNameValid && isEmailValid && isSelectedOptionValid;
+    const isValid = isFirstNameValid && isLastNameValid && isEmailValid ;
     setIsButtonDisabled(!isValid);
   };
 
   const handleCreate = () => {
-    dispatch(addClient({selectedOption, firstName, lastName, email}))
+    dispatch(addClient({ f_name: firstName, l_name: lastName, email}))
   }
 
   useEffect(() => {
@@ -58,12 +58,12 @@ const Clients = () => {
   // console.log("TY", isEditted);
   return (
     <div className={styles.clientsContainer}>
-      <Modal modalTitle="Add New Client" onClick={handleCreate} disable={isButtonDisabled}>
+      <Modal modalTitle="Add New Client" onClick={handleCreate} disable={false}>
         <TextInput
           label="First Name"
           star="*"
           placeholder="First Name"
-          type="search"
+          type="text"
           setValue={setFirstName}
           value={firstName}
         />
