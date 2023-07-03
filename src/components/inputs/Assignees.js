@@ -4,14 +4,13 @@ import styles from "./Assignees.module.css";
 import closeIcon from "../../assets/svgs/close-icon.svg";
 
 const Assignees = ({option, setSelected, payment}) => {
-  // console.log("DJFF", option);
   const handleDelete = () =>{
-    setSelected(prevData => prevData.filter(item => item.id !== option.id))
+    setSelected(prevData => prevData.filter(item => item.key !== option.key))
   }
   const onCommissionChange = (e) => {
     setSelected(prevState => {
       return prevState.map(obj => {
-        if (obj.id=== option.id) {
+        if (obj.key === option.key && obj.id===option.id) {
           return {...obj, commission: e.target.value};
         }
         return obj;

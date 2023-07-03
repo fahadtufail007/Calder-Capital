@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addPayment } from "../store/thunk/payment.thunk";
 import {  useSelector } from "react-redux/es/hooks/useSelector";
+import { formatDate } from "../util/helper";
 
 
 
@@ -21,20 +22,19 @@ import {  useSelector } from "react-redux/es/hooks/useSelector";
 
 const Payments = () => {
   const assignedToOptions = useSelector(state=> state.client.assignedTo)
-  // const assignedToOptions = useSelector(state=> state.client.assignedTo)
   const [isEditted, setIsEditted] = useState({});
   const data = useSelector(state=> state.payment.data)
   const [selectedOption, setSelectedOption] = useState([]);
   const [name, setName] = useState("")
-  const [dateStart, setDateStart] = useState("")
-  const [dateEnd, setDateEnd] = useState("")
-  const [payment, setPayment] = useState("")
+  const [dateStart, setDateStart] = useState()
+  const [dateEnd, setDateEnd] = useState()
+  const [payment, setPayment] = useState()
+  const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const dispatch = useDispatch()
   const handleCreate = () => {
     dispatch(addPayment({selectedOption, name, dateStart, dateEnd}))
-
   }
 
 
@@ -56,22 +56,19 @@ const validateForm = () => {
 useEffect(() => {
   validateForm();
   if (Object.keys(isEditted).length) {
+    setCreateUpdateFlag(false)
     const [dateStart, dateEnd] = isEditted['date'].split("-")
-    console.log("JJWE",parseInt(isEditted['payment'].split(' ')[1]));
-    setDateStart(dateStart)
-    setDateEnd(dateEnd)
+    setDateStart(formatDate(dateStart))
+    setDateEnd(formatDate(dateEnd))
     setName(isEditted['name'])
-    setPayment(isEditted['payment'].split(' ')[1])
-
-    setDateEnd(isEditted['date'])
-    setPayment(isEditted['amount'])
+    setPayment(Number(isEditted['payment'].split(' ')[1]))
     setIsEditted("")
   }
 }, [name, dateStart, dateEnd, selectedOption, isEditted]);
 
   return (
     <div className={styles.paymentsContainer}>
-      <Modal modalTitle="Add New Payment" disable={isButtonDisabled} onClick={handleCreate}>
+      <Modal modalTitle="Payment" disable={isButtonDisabled} onClick={handleCreate} createUpdateFlag={createUpdateFlag}>
         <TextInput
           label="Client Name"
           star="*"
@@ -113,7 +110,9 @@ useEffect(() => {
       </Modal>
       <AddNewButton
         title="Add New Payment"
-        onClick={() => document.getElementById("modalId").click()}
+        onClick={() => {
+          setCreateUpdateFlag(true)
+          document.getElementById("modalId").click()}}
       />
       <Table
         headings={[
@@ -126,9 +125,8 @@ useEffect(() => {
         ]}
         data={data}
         title="Edit"
+        componentTitle="Payments"
         setIsEditted={setIsEditted}
-
-        // onClick={() => document.getElementById("modalId").click()}
       />
       <div className={styles.paymentButtonWrapper}>
         <Button title="Download in CSV" radius="16px" size="13px" />

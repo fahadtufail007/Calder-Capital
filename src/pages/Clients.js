@@ -10,7 +10,7 @@ import {
   Assignees,
 } from "../components";
 import { useDispatch } from "react-redux";
-import { addClient } from "../store/thunk/client.thunk";
+import { addClient, updateClient } from "../store/thunk/client.thunk";
 import {  useSelector } from "react-redux/es/hooks/useSelector";
 
 const Clients = () => {
@@ -18,11 +18,13 @@ const Clients = () => {
   const data = useSelector(state=> state.client.data)
 
   const [selectedOption, setSelectedOption] = useState([]);
+  const [id, setId] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isEditted, setIsEditted] = useState({});
+  const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const dispatch = useDispatch()
 
   const validateForm = () => {
@@ -38,27 +40,30 @@ const Clients = () => {
     setIsButtonDisabled(!isValid);
   };
 
-  const handleCreate = () => {
-    dispatch(addClient({ f_name: firstName, l_name: lastName, email}))
+  const addUpdateClient = () => {
+    if (Object.keys(isEditted).length) {
+      dispatch(updateClient({ data: {f_name: firstName, l_name: lastName, email}, id: id}))
+    } else {
+      dispatch(addClient({ f_name: firstName, l_name: lastName, email}))
+    }
   }
 
   useEffect(() => {
     validateForm();
     if (Object.keys(isEditted).length) {
-      // console.log("ele",isEditted.length);
+      setCreateUpdateFlag(false)
       const [firstName, lastName] = isEditted['name'].split(' ')
       setFirstName(firstName)
       setLastName(lastName)
       setEmail(isEditted['email'])
       setSelectedOption(isEditted['assigned'])
+      setId(isEditted['id'])
       setIsEditted("")
     }
   }, [firstName, lastName, email, selectedOption, isEditted]);
-
-  // console.log("TY", isEditted);
   return (
     <div className={styles.clientsContainer}>
-      <Modal modalTitle="Add New Client" onClick={handleCreate} disable={false}>
+      <Modal modalTitle={"Client"} onClick={addUpdateClient} disable={false} createUpdateFlag={createUpdateFlag}>
         <TextInput
           label="First Name"
           star="*"
@@ -93,14 +98,20 @@ const Clients = () => {
       </Modal>
       <AddNewButton
         title="Add New Client"
-        onClick={() => document.getElementById("modalId").click()}
+        onClick={() => {
+          setCreateUpdateFlag(true)
+          setSelectedOption([])
+          setEmail("")
+          setFirstName("")
+          setLastName("")
+          document.getElementById("modalId").click()}}
       />
       <Table
         headings={["Name", "Email", "Date Updated", "Assigned To", "Actions"]}
         data={data}
         title="Edit"
+        componentTitle="Clients"
         setIsEditted={setIsEditted}
-        // onClick={() => document.getElementById("modalId").click()}
       />
     </div>
   );

@@ -37,6 +37,7 @@ const Earnings = () => {
           "Commission Earned",
           "Actions",
         ]}
+        componentTitle="Earnings"
         data={[
           {
             name: "John Doe",

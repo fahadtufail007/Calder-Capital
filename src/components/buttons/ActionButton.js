@@ -1,9 +1,12 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import styles from "./ActionButton.module.css";
 import dropdownIcon from "../../assets/svgs/dropdown-icon.svg";
+import { getDeleteDispatch } from "../../util/helper";
 
-const ActionButton = ({ onClick, title }) => {
+const ActionButton = ({ onClick, title, id, componentTitle }) => {
+  const dispatch = useDispatch()
   return (
     <div className="dropdown">
       <div
@@ -22,7 +25,7 @@ const ActionButton = ({ onClick, title }) => {
           </button>
         </li>
         <li>
-          <button className="dropdown-item">Delete</button>
+          <button className="dropdown-item" onClick={()=>getDeleteDispatch(id, dispatch, componentTitle)}>Delete</button>
         </li>
       </ul>
     </div>

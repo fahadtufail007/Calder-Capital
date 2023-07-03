@@ -2,11 +2,8 @@ import React from "react";
 import { ActionButton } from "..";
 import styles from "./Table.module.css";
 import styles1 from "../../styles/Clients.module.css";
-// import style1 from '../../styles/'
 
-
-const Table = ({  title, headings, data, setIsEditted }) => {
-  // console.log("ee", data);
+const Table = ({  title, headings, data, setIsEditted, componentTitle }) => {
   return (
     <div className={styles.scrollTable}>
       <table className={styles.GeneratedTable}>
@@ -23,6 +20,7 @@ const Table = ({  title, headings, data, setIsEditted }) => {
             return (
             <tr>
               {Object.keys(el)?.map((key) => {
+                if (key === 'id') return null
                 if (key==='assigned') {
                   const array = []
                   el[key].forEach(element => {
@@ -41,12 +39,12 @@ const Table = ({  title, headings, data, setIsEditted }) => {
                 })}
               <td>
                 <ActionButton title={title} 
-                // onClick={onClick} 
+                componentTitle={componentTitle}
                 onClick={() => {
                   setIsEditted(el)
                   document.getElementById("modalId").click()
                 }}
-
+                id={el.id}
                 />
               </td>
             </tr>

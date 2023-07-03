@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "../styles/Contractors.module.css";
@@ -10,10 +10,25 @@ const Contractors = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setconfirmPassword] = useState("")
+  const [createUpdateFlag ,setCreateUpdateFlag] = useState()
+  const [isEditted, setIsEditted] = useState()
+
+  useEffect(() => {
+    // validateForm();
+    if (Object.keys(isEditted).length) {
+      setCreateUpdateFlag(false)
+      const [firstName, lastName] = isEditted['name'].split(' ')
+      setFirstName(firstName)
+      setLastName(lastName)
+      setEmail(isEditted['email'])
+      setIsEditted("")
+    }
+  }, [firstName, lastName, email, isEditted]);
+
 
   return (
     <div className={styles.contractorsContainer}>
-      <Modal modalTitle="Add New Employee">
+      <Modal modalTitle="Employee" createUpdateFlag={true}>
         <TextInput
           label="First Name "
           star="*"
@@ -57,7 +72,8 @@ const Contractors = () => {
       </Modal>
       <AddNewButton
         title="Add New Contractor"
-        onClick={() => document.getElementById("modalId").click()}
+        onClick={() => {
+          document.getElementById("modalId").click()}}
       />
       <Table
         headings={["Name", "Email", "Date Updated", "Profile", "Actions"]}
@@ -84,6 +100,8 @@ const Contractors = () => {
           },
         ]}
         title="Edit"
+        setIsEditted={setIsEditted}
+        componentTitle="Contractors"
         onClick={() => document.getElementById("modalId").click()}
       />
     </div>

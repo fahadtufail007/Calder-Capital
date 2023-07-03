@@ -6,6 +6,7 @@ import { getClients } from '../thunk/client.thunk';
 const initialState = {
   data: [
     {
+      id: '3333',
       name: "John Doe",
       email: "johndoe247340@gmail.com",
       date: "May 3, 2023",
@@ -18,6 +19,7 @@ const initialState = {
       ],
     },
     {
+      id: "423523",
       name: "John Doe",
       email: "johndoe247340@gmail.com",
       date: "May 3, 2023",
