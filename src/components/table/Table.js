@@ -16,14 +16,14 @@ const Table = ({  title, headings, data, setIsEditted, componentTitle }) => {
         </thead>
 
         <tbody>
-          {data?.map((el) => {
+          {data?.map((element) => {
             return (
             <tr>
-              {Object.keys(el)?.map((key) => {
+              {Object.keys(element)?.map((key) => {
                 if (key === 'id') return null
                 if (key==='assigned') {
                   const array = []
-                  el[key].forEach(element => {
+                  element[key].forEach(element => {
                     array.push(element?.value)
                   });
                   return (
@@ -34,17 +34,17 @@ const Table = ({  title, headings, data, setIsEditted, componentTitle }) => {
                     </td>
                   )
                 } else {
-                  return (<td>{el[key]}</td>)
+                  return (<td>{element[key]}</td>)
                 }
                 })}
               <td>
                 <ActionButton title={title} 
                 componentTitle={componentTitle}
                 onClick={() => {
-                  setIsEditted(el)
+                  setIsEditted(element)
                   document.getElementById("modalId").click()
                 }}
-                id={el.id}
+                id={element.id}
                 />
               </td>
             </tr>

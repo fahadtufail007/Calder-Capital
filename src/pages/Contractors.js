@@ -13,17 +13,17 @@ const Contractors = () => {
   const [createUpdateFlag ,setCreateUpdateFlag] = useState()
   const [isEditted, setIsEditted] = useState()
 
-  useEffect(() => {
-    // validateForm();
-    if (Object.keys(isEditted).length) {
-      setCreateUpdateFlag(false)
-      const [firstName, lastName] = isEditted['name'].split(' ')
-      setFirstName(firstName)
-      setLastName(lastName)
-      setEmail(isEditted['email'])
-      setIsEditted("")
-    }
-  }, [firstName, lastName, email, isEditted]);
+  // useEffect(() => {
+  //   // validateForm();
+  //   if (Object.keys(isEditted).length) {
+  //     setCreateUpdateFlag(false)
+  //     const [firstName, lastName] = isEditted['name'].split(' ')
+  //     setFirstName(firstName)
+  //     setLastName(lastName)
+  //     setEmail(isEditted['email'])
+  //     setIsEditted("")
+  //   }
+  // }, [firstName, lastName, email, isEditted]);
 
 
   return (
