@@ -1,29 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { loginAction } from '../thunk/login.thunk';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios';
 
-const initialState = {
-  user: null,
-  logedIn: false,
-};
+export const login = createAsyncThunk('auth/login', async ({ email, password }) => {
+  try {
+    debugger
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`, { email, password });
+    const token = response.data.token;
+    return token;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+});
 
-export const loginReducer = createSlice({
-  name: "login",
-  initialState,
-  reducers: {
-    logOut: (state) => {
-      state.logedIn = false;
-    },
-    adminLogout: (state) => {
-      state.user = 2001;
-    },
+const authReducer = createSlice({
+  name: 'auth',
+  initialState: {
+    isLoggedIn: false,
+    token: null,
+    loading: false,
+    error: null,
   },
-  extraReducers: {
-    [loginAction.fulfilled]: (state, { payload }) => {
-      state.user = payload;
-      state.logedIn = true;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isLoggedIn = true;
+        state.token = action.payload;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
-export const { logOut, adminLogout } = loginReducer.actions;
-export default loginReducer.reducer
+export const { logOut, adminLogout } = authReducer.actions;
+export default authReducer.reducer;
