@@ -3,7 +3,6 @@ import axios from 'axios';
 
 export const login = createAsyncThunk('auth/login', async ({ email, password }) => {
   try {
-    debugger
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`, { email, password });
     const token = response.data.token;
     return token;

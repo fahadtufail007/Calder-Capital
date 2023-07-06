@@ -20,7 +20,7 @@ const Table = ({  title, headings, data, setIsEditted, componentTitle }) => {
             return (
             <tr>
               {Object.keys(element)?.map((key) => {
-                if (key === 'id') return null
+                if (key === '_id') return null
                 if (key==='assigned') {
                   const array = []
                   element[key].forEach(element => {

@@ -9,58 +9,60 @@ import {
   SelectInput,
   Assignees,
 } from "../components";
-import { useDispatch } from "react-redux";
-import { addClient, updateClient } from "../store/thunk/client.thunk";
-import {  useSelector } from "react-redux/es/hooks/useSelector";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllClients } from "../store/reducers/client.reducer";
 
 const Clients = () => {
   const assignedToOptions = useSelector(state=> state.client.assignedTo)
-  const data = useSelector(state=> state.client.data)
 
   const [selectedOption, setSelectedOption] = useState([]);
   const [id, setId] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isEditted, setIsEditted] = useState({});
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
+  const [clients, setClients] = useState([])
+  const appClients = useSelector(state => state.client.data);
   const dispatch = useDispatch()
 
   const validateForm = () => {
-    const emailRegex = /^\S+@\S+\.\S+$/; // Regular expression for email format
+  //   const emailRegex = /^\S+@\S+\.\S+$/; // Regular expression for email format
   
-    // Perform your validation checks here
-    const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
-    const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
-    const isEmailValid = emailRegex.test(email); // Check if email matches the email format
-    // const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
+  //   // Perform your validation checks here
+  //   const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
+  //   const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
+  //   const isEmailValid = emailRegex.test(email); // Check if email matches the email format
+  //   // const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
   
-    const isValid = isFirstNameValid && isLastNameValid && isEmailValid ;
-    setIsButtonDisabled(!isValid);
+  //   const isValid = isFirstNameValid && isLastNameValid && isEmailValid ;
+  //   setIsButtonDisabled(!isValid);
   };
 
   const addUpdateClient = () => {
-    if (Object.keys(isEditted).length) {
-      dispatch(updateClient({ data: {f_name: firstName, l_name: lastName, email}, id: id}))
-    } else {
-      dispatch(addClient({ f_name: firstName, l_name: lastName, email}))
-    }
+  //   if (Object.keys(isEditted).length) {
+  //     dispatch(updateClient({ data: {f_name: firstName, l_name: lastName, email}, id: id}))
+  //   } else {
+  //     dispatch(addClient({ f_name: firstName, l_name: lastName, email}))
+  //   }
   }
-
   useEffect(() => {
-    validateForm();
-    if (Object.keys(isEditted).length) {
-      setCreateUpdateFlag(false)
-      const [firstName, lastName] = isEditted['name'].split(' ')
-      setFirstName(firstName)
-      setLastName(lastName)
-      setEmail(isEditted['email'])
-      setSelectedOption(isEditted['assigned'])
-      setId(isEditted['id'])
-      setIsEditted("")
-    }
-  }, [firstName, lastName, email, selectedOption, isEditted]);
+    dispatch(getAllClients());
+  });
+
+  // useEffect(() => {
+  //   validateForm();
+  //   if (Object.keys(isEditted).length) {
+  //     setCreateUpdateFlag(false)
+  //     const [firstName, lastName] = isEditted['name'].split(' ')
+  //     setFirstName(firstName)
+  //     setLastName(lastName)
+  //     setEmail(isEditted['email'])
+  //     setSelectedOption(isEditted['assigned'])
+  //     setId(isEditted['id'])
+  //     setIsEditted("")
+  //   }
+  // }, [firstName, lastName, email, selectedOption, isEditted]);
   return (
     <div className={styles.clientsContainer}>
       <Modal modalTitle={"Client"} onClick={addUpdateClient} disable={false} createUpdateFlag={createUpdateFlag}>
@@ -89,7 +91,7 @@ const Clients = () => {
           setValue={setEmail}
         />
         <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
-          {assignedToOptions.map(option => <option value={option.id}>{option.value}</option>)}
+          {assignedToOptions?.map(option => <option value={option.id}>{option.value}</option>)}
         </SelectInput>
         {selectedOption.map((option)=>{
           return <Assignees key={option.key}  option={option} setSelected={setSelectedOption} />
@@ -106,13 +108,17 @@ const Clients = () => {
           setLastName("")
           document.getElementById("modalId").click()}}
       />
-      <Table
-        headings={["Name", "Email", "Date Updated", "Assigned To", "Actions"]}
-        data={data}
-        title="Edit"
-        componentTitle="Clients"
-        setIsEditted={setIsEditted}
-      />
+      {
+        clients.length?
+        <Table
+          headings={["Name", "Email", "Date Updated", "Assigned To", "Actions"]}
+          data={appClients}
+          title="Edit"
+          componentTitle="Clients"
+          setIsEditted={setIsEditted}
+        />:null
+
+      }
     </div>
   );
 };

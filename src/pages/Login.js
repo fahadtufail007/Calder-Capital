@@ -57,7 +57,7 @@ const Login = () => {
               id="flexCheckDefault"
             />
           </div>
-            <Button title="Login" onClick={() => handleLogin} disabled={loading}>
+            <Button title="Login" onClick={handleLogin} disabled={loading}>
               {loading ? 'Loading...' : 'Login'}
             </Button>
             {error && <p>{error}</p>}

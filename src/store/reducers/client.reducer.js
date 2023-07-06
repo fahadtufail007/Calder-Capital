@@ -1,64 +1,87 @@
-import { createSlice } from '@reduxjs/toolkit'
-// import styles from "../styles/Clients.module.css";
-import { getClients } from '../thunk/client.thunk';
-// import { loginAction } from '../thunk/login.thunk';
+// import { createSlice } from '@reduxjs/toolkit'
+// // import styles from "../styles/Clients.module.css";
+// import { getClients } from '../thunk/client.thunk';
+// // import { loginAction } from '../thunk/login.thunk';
 
-const initialState = {
-  data: [
-    {
-      id: '3333',
-      name: "John Doe",
-      email: "johndoe247340@gmail.com",
-      date: "May 3, 2023",
-      assigned: [
-        {id: '13434', value: 'Person1', commission: '5'},
-        {id: '564', value: 'Person2', commission: '5'},
-        {id: '435', value: 'Person3', commission: '5'},
-        {id: '657', value: 'Person4', commission: '5'},
+// const convertDataFromDB = (clients) => {
+//   debugger
+//   const newArray = clients.map((obj) => {
+//     return {
+//       name: obj.f_name + ' ' + obj.l_name,
+//       email: obj.email,
+//       id: obj._id,
+//       role: obj.role,
+//       date: obj.date,
+//     };
+//   });
+//   console.log('clients newArray', clients);
+//   return newArray;  
+// }
+// export const clientReducer = createSlice({
+//   name: "client",
+//   initialState: {
+//     data:[]
+//   },
+//   reducers: {
+//     logOut: (state) => {
+//       state.logedIn = false;
+//     },
+//     adminLogout: (state) => {
+//       state.user = 2001;
+//     },
+//   },
+//   extraReducers: {
+//     [getClients.fulfilled]: (state, { payload }) => {
+//       state.data = convertDataFromDB(payload);
+//       // state.logedIn = true;
+//     },
+//   },
+// });
 
-      ],
-    },
-    {
-      id: "423523",
-      name: "John Doe",
-      email: "johndoe247340@gmail.com",
-      date: "May 3, 2023",
-      assigned: [
-        {id: '4574', value: 'Person1', commission: '5'},
-        {id: '3643', value: 'Person2', commission: '5'},
-        {id: '6756', value: 'Person3', commission: '5'},
-        {id: '3456', value: 'Person4', commission: '5'},
-      ],
-    },
-  ],
-  assignedTo: [
-    {value: 'Abdullah', id: '113'},
-    {value: 'Asad', id: '3445'},
-    {value: "Arham", id: '3453' },
-    {value: "Rehan", id: '654' },
-    {value: "Irfan", id: '6804' }
-  ],
-  laoding: false,
-};
+// export const { logOut, adminLogout } = clientReducer.actions;
+// export default clientReducer.reducer
 
-export const clientReducer = createSlice({
-  name: "client",
-  initialState,
-  reducers: {
-    logOut: (state) => {
-      state.logedIn = false;
-    },
-    adminLogout: (state) => {
-      state.user = 2001;
-    },
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios';
+
+export const getAllClients = createAsyncThunk('client/getAllClients', async (data) => {
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/client`, {headers: {
+          'Access-Control-Allow-Origin': '*',
+        }});
+        return res?.data;
+      } catch (error) {
+        console.error(error);
+        throw new Error(error.response.data.message);
+      }
+});
+  const convertDataFromDB = (clients) => {
+    const newArray = clients.map((obj) => {
+      return {
+        name: obj.f_name + ' ' + obj.l_name,
+        email: obj.email,
+        id: obj._id,
+        role: obj.role,
+        date: obj.date,
+      };
+    });
+    console.log('newArray', clients);
+    return newArray;  
+  }
+const clientsReducer = createSlice({
+  name: 'client',
+  initialState: {
+    data: []
   },
+  reducers: {},
   extraReducers: {
-    [getClients.fulfilled]: (state, { payload }) => {
-      state.data = payload;
+    [getAllClients.fulfilled]: (state, { payload }) => {
+      
+      state.data = convertDataFromDB(payload);
       // state.logedIn = true;
     },
   },
 });
 
-export const { logOut, adminLogout } = clientReducer.actions;
-export default clientReducer.reducer
+export const {  } = clientsReducer.actions;
+export default clientsReducer.reducer;
