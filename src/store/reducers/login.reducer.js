@@ -3,7 +3,6 @@ import axios from 'axios';
 
 export const login = createAsyncThunk('auth/login', async ({ email, password }) => {
   try {
-    debugger
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`, { email, password });
     const token = response.data.token;
     return token;
@@ -17,6 +16,7 @@ const authReducer = createSlice({
   initialState: {
     isLoggedIn: false,
     token: null,
+    role: null,
     loading: false,
     error: null,
   },
@@ -30,14 +30,15 @@ const authReducer = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isLoggedIn = true;
-        state.token = action.payload;
+        state.token = action.payload.token;
+        state.role = action.payload.role
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
   },
-});
+}); 
 
 export const { logOut, adminLogout } = authReducer.actions;
 export default authReducer.reducer;

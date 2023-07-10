@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 // import { loginAction } from '../thunk/login.thunk';
+import { fecthClients } from '../thunk/payment.thunk';
 
 const initialState = {
   data: [
@@ -20,6 +21,7 @@ const initialState = {
         amount: "USD 500",
     },
   ],
+  clients: [{value: '', label: '' }],
   laoding: false,
 };
 
@@ -34,12 +36,12 @@ export const pyamentReducer = createSlice({
       state.user = 2001;
     },
   },
-//   extraReducers: {
-//     [loginAction.fulfilled]: (state, { payload }) => {
-//       state.user = payload;
-//       state.logedIn = true;
-//     },
-//   },
+  extraReducers: {
+    [fecthClients.fulfilled]: (state, { payload }) => {
+      state.clients = payload;
+      // state.logedIn = true;
+    },
+  },
 });
 
 export const { logOut, adminLogout } = pyamentReducer.actions;

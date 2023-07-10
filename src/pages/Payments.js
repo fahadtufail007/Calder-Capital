@@ -12,18 +12,16 @@ import {
 } from "../components";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addPayment } from "../store/thunk/payment.thunk";
+import { addPayment,fecthClients } from "../store/thunk/payment.thunk";
 import {  useSelector } from "react-redux/es/hooks/useSelector";
 import { formatDate } from "../util/helper";
-
-
-
+import Select from 'react-select';
 
 
 const Payments = () => {
   const assignedToOptions = useSelector(state=> state.client.assignedTo)
   const [isEditted, setIsEditted] = useState({});
-  const data = useSelector(state=> state.payment.data)
+  const {data, clients} = useSelector(state=> state.payment)
   const [selectedOption, setSelectedOption] = useState([]);
   const [name, setName] = useState("")
   const [dateStart, setDateStart] = useState()
@@ -33,10 +31,10 @@ const Payments = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const dispatch = useDispatch()
-  const handleCreate = () => {
+
+  const handleAddPayment = () => {
     dispatch(addPayment({selectedOption, name, dateStart, dateEnd}))
   }
-
 
 const validateForm = () => {
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Regular expression for yyyy-mm-dd format
@@ -65,18 +63,31 @@ useEffect(() => {
     setIsEditted("")
   }
 }, [name, dateStart, dateEnd, selectedOption, isEditted]);
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      // width: 300, // Set your desired width
+      minHeight: 45, // Set your desired height
+    }),
+  };
 
   return (
     <div className={styles.paymentsContainer}>
-      <Modal modalTitle="Payment" disable={isButtonDisabled} onClick={handleCreate} createUpdateFlag={createUpdateFlag}>
-        <TextInput
-          label="Client Name"
-          star="*"
-          placeholder="Client Name"
-          type="text"
-          value={name}
-          setValue={setName}
-        />
+      <Modal modalTitle="Payment" disable={isButtonDisabled} onClick={handleAddPayment} createUpdateFlag={createUpdateFlag}>
+      <Select    
+        className={styles.reactSelectSingle}
+        // classNamePrefix="Client Name"  
+        styles={customStyles} 
+        label="Client Name"
+        placeholder="Client Name"
+        onChange={(e)=>{
+          console.log("JE", e.value);
+          setName(e.value)
+        }}
+        isSearchable={true}
+        required
+        name="Client Name"
+        options={clients}/>
         <TextInput 
           label="Payment"
           star="*"
@@ -112,6 +123,7 @@ useEffect(() => {
         title="Add New Payment"
         onClick={() => {
           setCreateUpdateFlag(true)
+          dispatch(fecthClients())
           document.getElementById("modalId").click()}}
       />
       <Table

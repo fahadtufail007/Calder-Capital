@@ -23,8 +23,6 @@ const Login = () => {
   const isButtonDisabled = !email || !password || !email.match(emailRegex);
   
   const handleLogin = () => {
-    console.log("hi baby")
-    debugger;
     dispatch(login( {email, password}))
   }
 
@@ -57,7 +55,7 @@ const Login = () => {
               id="flexCheckDefault"
             />
           </div>
-            <Button title="Login" onClick={() => handleLogin} disabled={loading}>
+            <Button title="Login" onClick={handleLogin} disabled={loading}>
               {loading ? 'Loading...' : 'Login'}
             </Button>
             {error && <p>{error}</p>}

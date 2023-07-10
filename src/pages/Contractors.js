@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 import styles from "../styles/Contractors.module.css";
 import { AddNewButton, Modal, Table, TextInput } from "../components";
+import { useSelector } from "react-redux";
 
 const Contractors = () => {
+  const {data} = useSelector(state=> state.contractor)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setconfirmPassword] = useState("")
-  const [createUpdateFlag ,setCreateUpdateFlag] = useState()
-  const [isEditted, setIsEditted] = useState()
+  const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
+
+  const [isEditted, setIsEditted] = useState({})
+
 
   useEffect(() => {
     // validateForm();
     if (Object.keys(isEditted).length) {
       setCreateUpdateFlag(false)
       const [firstName, lastName] = isEditted['name'].split(' ')
+      console.log("EJE", isEditted['name']);
       setFirstName(firstName)
       setLastName(lastName)
       setEmail(isEditted['email'])
@@ -28,7 +32,7 @@ const Contractors = () => {
 
   return (
     <div className={styles.contractorsContainer}>
-      <Modal modalTitle="Employee" createUpdateFlag={true}>
+      <Modal modalTitle="Employee" createUpdateFlag={createUpdateFlag}>
         <TextInput
           label="First Name "
           star="*"
@@ -56,7 +60,7 @@ const Contractors = () => {
         <TextInput
           label="Password"
           star="*"
-          placeholder="Password"
+          placeholder={createUpdateFlag ? "Password" : "Change Password"}
           type="password"
           value={password}
           setValue={setPassword}
@@ -73,32 +77,17 @@ const Contractors = () => {
       <AddNewButton
         title="Add New Contractor"
         onClick={() => {
+          setCreateUpdateFlag(true)
+
+          // setSelectedOption([])
+          setEmail("")
+          setFirstName("")
+          setLastName("")
           document.getElementById("modalId").click()}}
       />
       <Table
-        headings={["Name", "Email", "Date Updated", "Profile", "Actions"]}
-        data={[
-          {
-            name: "John Doe",
-            email: "johndoe247340@gmail.com",
-            date: "May 3, 2023",
-            profile: (
-              <Link className={styles.viewProfile} to="/earnings">
-                View Profile
-              </Link>
-            ),
-          },
-          {
-            name: "John Doe",
-            email: "johndoe247340@gmail.com",
-            date: "May 3, 2023",
-            profile: (
-              <Link className={styles.viewProfile} to="/earnings">
-                View Profile
-              </Link>
-            ),
-          },
-        ]}
+        headings={["Name", "Email", "Date Updated", "Actions"]}
+        data={data}
         title="Edit"
         setIsEditted={setIsEditted}
         componentTitle="Contractors"
