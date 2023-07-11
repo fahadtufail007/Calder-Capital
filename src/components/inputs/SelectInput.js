@@ -8,7 +8,7 @@ const SelectInput = ({ children, setSelected, selected }) => {
     var index = event.nativeEvent.target.selectedIndex;
     setSelected((prevState) => {
       const isObjectPresent = prevState.some((obj) => obj.key === event.target.value);
-    
+
       if (isObjectPresent || event.target.value === "") {
         return prevState; // Object already exists, return the previous state
       } else {
@@ -36,9 +36,8 @@ const SelectInput = ({ children, setSelected, selected }) => {
           {children}
         </select>
         <label
-          className={`${styles.didFloatingLabel} ${
-            selected ? styles.floating : ""
-          }`}>
+          className={`${styles.didFloatingLabel} ${selected ? styles.floating : ""
+            }`}>
           Assign To{" "}
           {selected ? <span className={styles.span}>*</span> : ""}
         </label>
