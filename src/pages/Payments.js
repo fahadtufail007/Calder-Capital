@@ -12,17 +12,23 @@ import {
 } from "../components";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addPayment,fecthClients } from "../store/thunk/payment.thunk";
-import {  useSelector } from "react-redux/es/hooks/useSelector";
+import { addPayment, fecthClients, getPayments } from "../store/thunk/payment.thunk";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 import { formatDate } from "../util/helper";
 import Select from 'react-select';
-
+import axios from "axios";
 
 const Payments = () => {
-  const assignedToOptions = useSelector(state=> state.client.assignedTo)
+
+  const dispatch = useDispatch()
+  const assignedToOptions = useSelector(state => state.client.assignedTo)
+  const payments = useSelector(state => state.payment.payments)
+  const clients = useSelector(state => state.client.data)
+
+
   const [isEditted, setIsEditted] = useState({});
-  const {data, clients} = useSelector(state=> state.payment)
   const [selectedOption, setSelectedOption] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [name, setName] = useState("")
   const [dateStart, setDateStart] = useState()
   const [dateEnd, setDateEnd] = useState()
@@ -30,39 +36,77 @@ const Payments = () => {
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-  const dispatch = useDispatch()
 
   const handleAddPayment = () => {
-    dispatch(addPayment({selectedOption, name, dateStart, dateEnd}))
+    dispatch(addPayment({ selectedOption, name, dateStart, dateEnd }))
   }
 
-const validateForm = () => {
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Regular expression for yyyy-mm-dd format
-  const paymentRegex = /^[A-Za-z\s]+$/; // Regular expression for alphabetic characters and spaces only
+  const validateForm = () => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Regular expression for yyyy-mm-dd format
+    const paymentRegex = /^[A-Za-z\s]+$/; // Regular expression for alphabetic characters and spaces only
 
-  const isValidStartDate = dateRegex.test(dateStart);
-  const isValidEndDate = dateRegex.test(dateEnd);
-  const isValidPayment = paymentRegex.test(payment);
-  const isValidName = paymentRegex.test(name);
+    const isValidStartDate = dateRegex.test(dateStart);
+    const isValidEndDate = dateRegex.test(dateEnd);
+    const isValidPayment = paymentRegex.test(payment);
+    const isValidName = paymentRegex.test(name);
 
-  const areOptionsSelected = selectedOption.length > 0;
-  const isStartDateBeforeEndDate = isValidStartDate && isValidEndDate && new Date(dateStart) < new Date(dateEnd);
-  const isValid = (isStartDateBeforeEndDate && isValidPayment && isValidName && areOptionsSelected);
-  setIsButtonDisabled(!isValid);
-};
+    const areOptionsSelected = selectedOption.length > 0;
+    const isStartDateBeforeEndDate = isValidStartDate && isValidEndDate && new Date(dateStart) < new Date(dateEnd);
+    const isValid = (isStartDateBeforeEndDate && isValidPayment && isValidName && areOptionsSelected);
+    setIsButtonDisabled(!isValid);
+  };
 
-useEffect(() => {
-  validateForm();
-  if (Object.keys(isEditted).length) {
-    setCreateUpdateFlag(false)
-    const [dateStart, dateEnd] = isEditted['date'].split("-")
-    setDateStart(formatDate(dateStart))
-    setDateEnd(formatDate(dateEnd))
-    setName(isEditted['name'])
-    setPayment(Number(isEditted['payment'].split(' ')[1]))
-    setIsEditted("")
+  useEffect(() => {
+    dispatch(getPayments());
+    fetchEmployees();
+  }, [])
+
+  useEffect(() => {
+    validateForm();
+    if (Object.keys(isEditted).length) {
+      setCreateUpdateFlag(false)
+      const [dateStart, dateEnd] = isEditted['date'].split("-")
+      setDateStart(formatDate(dateStart))
+      setDateEnd(formatDate(dateEnd))
+      setName(isEditted['name'])
+      setPayment(Number(isEditted['payment'].split(' ')[1]))
+      setIsEditted("")
+    }
+  }, [name, dateStart, dateEnd, selectedOption, isEditted]);
+
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/employee`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      setEmployees(res?.data)
+    } catch (error) {
+      console.log('err', error);
+    }
   }
-}, [name, dateStart, dateEnd, selectedOption, isEditted]);
+
+  const getClientName = (id) => {
+    const client = clients.find((x) => console.log(x._id == id));
+    if (client) {
+      return `${client.f_name} ${client.l_name}`;
+    } else {
+      return "";
+    }
+  };
+
+  const getEmpName = (id) => {
+    const emp = employees.find((x) => x._id === id);
+    if (emp) {
+      return `${emp.f_name} ${emp.l_name}`;
+    } else {
+      return "";
+    }
+  };
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -71,30 +115,31 @@ useEffect(() => {
     }),
   };
 
+  console.log(payments);
   return (
     <div className={styles.paymentsContainer}>
       <Modal modalTitle="Payment" disable={isButtonDisabled} onClick={handleAddPayment} createUpdateFlag={createUpdateFlag}>
-      <Select    
-        className={styles.reactSelectSingle}
-        // classNamePrefix="Client Name"  
-        styles={customStyles} 
-        label="Client Name"
-        placeholder="Client Name"
-        onChange={(e)=>{
-          console.log("JE", e.value);
-          setName(e.value)
-        }}
-        isSearchable={true}
-        required
-        name="Client Name"
-        options={clients}/>
-        <TextInput 
+        <Select
+          className={styles.reactSelectSingle}
+          // classNamePrefix="Client Name"  
+          styles={customStyles}
+          label="Client Name"
+          placeholder="Client Name"
+          onChange={(e) => {
+            console.log("JE", e.value);
+            setName(e.value)
+          }}
+          isSearchable={true}
+          required
+          name="Client Name"
+          options={clients} />
+        <TextInput
           label="Payment"
           star="*"
           placeholder="Payment"
           type="number"
           value={payment}
-          setValue={setPayment}/>
+          setValue={setPayment} />
         <TextInput
           label="Date Range"
           star="*"
@@ -114,8 +159,8 @@ useEffect(() => {
         <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
           {assignedToOptions.map(option => <option value={option.id}>{option.value}</option>)}
         </SelectInput>
-        {selectedOption.map((option)=>{
-          return <Assignees key={option.key}  option={option} setSelected={setSelectedOption} />
+        {selectedOption.map((option) => {
+          return <Assignees key={option.key} option={option} setSelected={setSelectedOption} />
         })}
 
       </Modal>
@@ -124,7 +169,8 @@ useEffect(() => {
         onClick={() => {
           setCreateUpdateFlag(true)
           dispatch(fecthClients())
-          document.getElementById("modalId").click()}}
+          document.getElementById("modalId").click()
+        }}
       />
       <Table
         headings={[
@@ -135,7 +181,14 @@ useEffect(() => {
           "Amount",
           "Actions",
         ]}
-        data={data}
+        column={[
+          (element) => { return getClientName(element?.clientId) },
+          (element) => { return 'Date missign from backend' },
+          'amount',
+          (element) => { return getEmpName(element?.clientId) },
+          (element) => { return `${element.emp_share}%` },
+        ]}
+        data={payments}
         title="Edit"
         componentTitle="Payments"
         setIsEditted={setIsEditted}

@@ -1,27 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 // import { loginAction } from '../thunk/login.thunk';
-import { fecthClients } from '../thunk/payment.thunk';
+import { getPayments } from '../thunk/payment.thunk';
 
 const initialState = {
-  data: [
-    {
-        // id: '111',
-        name: "John Doe",
-        date: "01 May, 2023 - 31 May, 2023",
-        payment: "USD 5000",
-        emplyees: "Abdullah",
-        amount: "USD 500",
-    },
-    {
-        // id: '1333',
-        name: "John Doe",
-        date: "01 May, 2023 - 31 May, 2023",
-        payment: "USD 5000",
-        emplyees: "Abdullah",
-        amount: "USD 500",
-    },
-  ],
-  clients: [{value: '', label: '' }],
+  payments: [],
   laoding: false,
 };
 
@@ -37,10 +19,16 @@ export const pyamentReducer = createSlice({
     },
   },
   extraReducers: {
-    [fecthClients.fulfilled]: (state, { payload }) => {
-      state.clients = payload;
-      // state.logedIn = true;
+    [getPayments.fulfilled]: (state, { payload }) => {
+      state.payments = payload;
+      state.laoding = false;
     },
+    [getPayments.pending]: (state) => {
+      state.laoding = true;
+    },
+    [getPayments.rejected]: (state) => {
+      state.laoding = false;
+    }
   },
 });
 

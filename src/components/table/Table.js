@@ -3,7 +3,7 @@ import { ActionButton } from "..";
 import styles from "./Table.module.css";
 import styles1 from "../../styles/Clients.module.css";
 
-const Table = ({ title, headings, data, setIsEditted, componentTitle, column }) => {
+const Table = ({ title, headings, data, setIsEditted, componentTitle, column = [] }) => {
   return (
     <div className={styles.scrollTable}>
       <table className={styles.GeneratedTable}>
