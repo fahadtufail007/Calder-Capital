@@ -4,7 +4,7 @@ import styles from "./Modal.module.css";
 
 import Button from "../buttons/Button";
 
-const Modal = ({ children, modalTitle , onClick, disable, createUpdateFlag}) => {
+const Modal = ({ children, modalTitle, onClick, disable, createUpdateFlag }) => {
   return (
     <div>
       <button
@@ -25,7 +25,7 @@ const Modal = ({ children, modalTitle , onClick, disable, createUpdateFlag}) => 
           <div className="modal-content">
             <div className="modal-body">
               <div className={styles.modaHeader}>
-                <div className={styles.modalTitle}>{createUpdateFlag ? `Add New ${modalTitle}`: `Update ${modalTitle}`}</div>
+                <div className={styles.modalTitle}>{createUpdateFlag ? `Add New ${modalTitle}` : `Update ${modalTitle}`}</div>
               </div>
               <div className={styles.contentWrapper}>
                 {children}
@@ -40,13 +40,13 @@ const Modal = ({ children, modalTitle , onClick, disable, createUpdateFlag}) => 
                     onClick={onClick}
                     disabled={disable}
                   /> : <Button
-                  title="Update"
-                  radius="10px"
-                  size="15px"
-                  height="36px"
-                  onClick={onClick}
-                  disabled={disable}
-                />}
+                    title="Update"
+                    radius="10px"
+                    size="15px"
+                    height="36px"
+                    onClick={onClick}
+                    disabled={disable}
+                  />}
                 </div>
               </div>
             </div>

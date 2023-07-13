@@ -1,4 +1,5 @@
 import { deleteClient } from "../store/thunk/client.thunk";
+import { deleteContractor } from "../store/thunk/contractor.thunk";
 export const formatDate = (dateString) => {
     const dateObject = new Date(dateString);
     const year = dateObject.getFullYear();
@@ -8,11 +9,10 @@ export const formatDate = (dateString) => {
     return formattedDate;
 }
 
-export const getDeleteDispatch = (id,dispatch, compTitle)=> {
-    if (compTitle==='Clients') {
-        dispatch(deleteClient({id}))
-    } else if (compTitle==='Contractors') {
-        console.log("EJKEJE", compTitle)
+export const getDeleteDispatch = (id, dispatch, compTitle) => {
+    if (compTitle === 'Clients') {
+        dispatch(deleteClient({ id }))
+    } else if (compTitle === 'Contractors') {
+        dispatch(deleteContractor({ id }))
     }
 }
-  
