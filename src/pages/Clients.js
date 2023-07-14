@@ -69,7 +69,7 @@ const Clients = () => {
       setLastName(l_name)
       setEmail(isEditted['email'])
       setSelectedOption(isEditted['assignee']?.map((x => {
-        const emp = employees.find(y => y._id === x.employee_id)
+        const emp = employees?.find(y => y._id === x.employee_id)
         return { key: emp._id, value: emp.f_name + " " + emp.l_name, commission: x.employee_percentage }
       })))
       setId(isEditted['_id'])
@@ -77,11 +77,10 @@ const Clients = () => {
     }
   }, [firstName, lastName, email, selectedOption, isEditted]);
 
-  console.log(employees, 'employees');
   const getAssinees = (arr) => {
     let result = '';
-    arr.forEach((x, i) => {
-      const emp = employees.find(y => y._id === x.employee_id)
+    arr?.forEach((x, i) => {
+      const emp = employees?.find(y => y._id === x.employee_id)
       result = result + ` ${emp?.f_name} ${emp?.l_name} ${arr.length === i + 1 ? '' : ','}`
 
     })

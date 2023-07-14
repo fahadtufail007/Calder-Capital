@@ -4,7 +4,6 @@ import axios from "axios";
 
 export const getPayments = createAsyncThunk("payments/getPayments", async (data, { dispatch }) => {
   const token = localStorage.getItem("token");
-  console.log("token", data);
   try {
     const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment`, {
       headers: {
@@ -34,6 +33,23 @@ export const deletePayment = createAsyncThunk("payments/deletePayment", async ({
   }
 });
 
+export const updatePayment = createAsyncThunk("payments/updatePayment", async ({ data, id }, { dispatch }) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await axios.put(`${process.env.REACT_APP_BASE_URL}/payment/${id}`, data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    if (res?.data) {
+      dispatch(getPayments());
+    }
+    return res?.data;
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 export const addPayment = createAsyncThunk("payments/addClient", async (data, { dispatch }) => {
   const token = localStorage.getItem("token");

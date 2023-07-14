@@ -1,5 +1,8 @@
-import React from "react";
-import styles from "../styles/Payments.module.css";
+import React, { useState, useEffect } from "react";
+import moment from 'moment';
+import Select from 'react-select';
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 import {
   AddNewButton,
@@ -7,19 +10,13 @@ import {
   Button,
   TextInput,
   Modal,
-  SelectInput,
   Assignees,
 } from "../components";
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { addPayment, getPayments } from "../store/thunk/payment.thunk";
-import { useSelector } from "react-redux/es/hooks/useSelector";
+import styles from "../styles/Payments.module.css";
+import { addPayment, getPayments, updatePayment } from "../store/thunk/payment.thunk";
 import { formatDate } from "../util/helper";
-import Select from 'react-select';
-import axios from "axios";
 import { getContractors } from "../store/thunk/contractor.thunk";
 import { getClients } from "../store/thunk/client.thunk";
-import moment from 'moment';
 
 const Payments = () => {
 
@@ -32,6 +29,7 @@ const Payments = () => {
     options.push({ value: element._id, label: `${element.f_name} ${element.l_name}` })
   });
 
+  const [id, setId] = useState("")
   const [isEditted, setIsEditted] = useState({});
   const [selectedOption, setSelectedOption] = useState([]);
   const [clientId, setClientId] = useState("")
@@ -41,9 +39,47 @@ const Payments = () => {
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+  useEffect(() => {
+    dispatch(getPayments());
+    dispatch(getClients());
+    dispatch(getContractors());
+  }, [])
+
+  useEffect(() => {
+    setSelectedOption([]);
+    getEmployees(clientId)
+  }, [clientId])
+
+  useEffect(() => {
+    validateForm();
+    if (Object.keys(isEditted).length) {
+      setCreateUpdateFlag(false)
+      const { dateStart, dateEnd, assignee } = isEditted;
+      setDateStart(formatDate(dateStart))
+      setDateEnd(formatDate(dateEnd))
+      setClientId(isEditted['clientId'])
+      setPayment(Number(isEditted['payment']))
+      setIsEditted("")
+      setId(isEditted['_id'])
+      setSelectedOption([]);
+      assignee.map((x) => {
+        setSelectedOption((prevState) => {
+          const employee = employees.find(employee => employee._id === x.employee_id)
+          return [
+            ...prevState,
+            {
+              key: x.employee_id,
+              value: `${employee.f_name} ${employee.l_name}`,
+              commission: x.employee_percentage,
+            },
+          ];
+        });
+      })
+    }
+  }, [clientId, dateStart, dateEnd, selectedOption, isEditted]);
 
   const getEmployees = (clientId) => {
-    const client = clients.find(client => client._id === clientId);
+    const client = clients?.find(client => client._id === clientId);
     if (client) {
       client?.assignee.map((x) => {
         setSelectedOption((prevState) => {
@@ -69,10 +105,12 @@ const Payments = () => {
       assignee.push({ employee_id: x.key, employee_percentage: x.commission })
     })
     if (!createUpdateFlag) {
-      // dispatch(updateClient({ data: { clientId, dateStart, dateEnd, payment, assignee }, id: id }))
+      dispatch(updatePayment({ data: { clientId, dateStart, dateEnd, payment, assignee }, id: id }))
     } else {
       dispatch(addPayment({ clientId, dateStart, dateEnd, payment, assignee }))
     }
+
+    resetStates();
   }
 
   const validateForm = () => {
@@ -89,30 +127,6 @@ const Payments = () => {
     const isValid = (isStartDateBeforeEndDate && isValidPayment && isValidName && areOptionsSelected);
     setIsButtonDisabled(!isValid);
   };
-
-  useEffect(() => {
-    dispatch(getPayments());
-    dispatch(getClients());
-    dispatch(getContractors());
-  }, [])
-
-  useEffect(() => {
-    setSelectedOption([]);
-    getEmployees(clientId)
-  }, [clientId])
-
-  useEffect(() => {
-    validateForm();
-    if (Object.keys(isEditted).length) {
-      setCreateUpdateFlag(false)
-      const [dateStart, dateEnd] = isEditted['date'].split("-")
-      setDateStart(formatDate(dateStart))
-      setDateEnd(formatDate(dateEnd))
-      setClientId(isEditted['name'])
-      setPayment(Number(isEditted['payment'].split(' ')[1]))
-      setIsEditted("")
-    }
-  }, [clientId, dateStart, dateEnd, selectedOption, isEditted]);
 
   const getClientName = (id) => {
     const client = clients?.find((x) => x._id == id);
@@ -157,6 +171,14 @@ const Payments = () => {
     return date ? moment(date).format('DD MMM, YYYY') : ''
   }
 
+  const resetStates = () => {
+    setClientId('')
+    setPayment('')
+    setDateEnd('')
+    setDateStart('')
+    setSelectedOption([]);
+  }
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -180,7 +202,9 @@ const Payments = () => {
           isSearchable={true}
           required
           name="Client Name"
-          options={options} />
+          options={options}
+        />
+
         <TextInput
           label="Payment"
           star="*"
@@ -212,10 +236,7 @@ const Payments = () => {
       <AddNewButton
         title="Add New Payment"
         onClick={() => {
-          setClientId('')
-          setPayment('')
-          setDateEnd('')
-          setDateStart('')
+          resetStates();
           setCreateUpdateFlag(true)
           document.getElementById("modalId").click()
         }}
@@ -239,7 +260,10 @@ const Payments = () => {
         data={payments}
         title="Edit"
         componentTitle="Payments"
-        setIsEditted={setIsEditted}
+        setIsEditted={(e) => {
+          setClientId(e.clientId)
+          setIsEditted(e);
+        }}
       />
       <div className={styles.paymentButtonWrapper}>
         <Button title="Download in CSV" radius="16px" size="13px" />
