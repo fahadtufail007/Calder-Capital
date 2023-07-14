@@ -4,6 +4,7 @@ import styles from "../styles/Contractors.module.css";
 import { AddNewButton, Modal, Table, TextInput } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { addContractor, getContractors, updateContractor } from "../store/thunk/contractor.thunk";
+import moment from 'moment';
 
 const Contractors = () => {
   const dispatch = useDispatch();
@@ -28,11 +29,11 @@ const Contractors = () => {
     validateForm()
     if (Object.keys(isEditted).length) {
       setCreateUpdateFlag(false)
-      const [firstName, lastName] = isEditted['name'].split(' ')
-      console.log("EJE", isEditted['name']);
-      setFirstName(firstName)
-      setLastName(lastName)
+      const { f_name, l_name } = isEditted;
+      setFirstName(f_name)
+      setLastName(l_name)
       setEmail(isEditted['email'])
+      setId(isEditted['_id'])
       setIsEditted("")
     }
   }, [firstName, lastName, email, isEditted, password, confirmPassword]);
@@ -44,7 +45,7 @@ const Contractors = () => {
     const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
     const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
     const isEmailValid = emailRegex.test(email); // Check if email matches the email format
-    const isPasswordMatched = password.length > 0 && password === confirmPassword;
+    const isPasswordMatched = password.length > 0 ? password === confirmPassword : true;
 
     // const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
 
@@ -53,10 +54,22 @@ const Contractors = () => {
   };
 
   const addUpdateEmployee = () => {
+
+    const data = {
+      f_name: firstName,
+      l_name: lastName,
+      email,
+      password,
+      is_verified: true,
+      is_admin: false
+    }
+    if (password == '') {
+      delete data.password;
+    }
     if (!createUpdateFlag) {
-      dispatch(updateContractor({ data: { f_name: firstName, l_name: lastName, email, password, is_verified: true, is_admin: false }, id: id }))
+      dispatch(updateContractor({ data, id }))
     } else {
-      dispatch(addContractor({ f_name: firstName, l_name: lastName, email, password, is_verified: true, is_admin: false }))
+      dispatch(addContractor(data))
     }
   }
 
@@ -108,8 +121,6 @@ const Contractors = () => {
         title="Add New Contractor"
         onClick={() => {
           setCreateUpdateFlag(true)
-
-          // setSelectedOption([])
           setEmail("")
           setFirstName("")
           setLastName("")
@@ -120,7 +131,12 @@ const Contractors = () => {
       />
       <Table
         headings={["Name", "Email", "Date Updated", "Actions"]}
-        column={[(element) => { return `${element.f_name} ${element.l_name}` }, 'email', () => 'Missing from backend']}
+        column={[
+          (element) => { return `${element.f_name} ${element.l_name}` },
+          'email',
+          (element) => {
+            return element?.updatedAt ? moment(element?.updatedAt).format('MMM DD, YYYY') : ''
+          }]}
         data={data}
         title="Edit"
         setIsEditted={setIsEditted}

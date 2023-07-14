@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { addClient, getClients, updateClient } from "../store/thunk/client.thunk";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import axios from "axios";
+import moment from 'moment';
 
 const Clients = () => {
   const assignedToOptions = useSelector(state => state.client.assignedTo)
@@ -147,8 +148,15 @@ const Clients = () => {
         }}
       />
       <Table
-        headings={["Name", "Email", "Date", "Assigned To", "Actions"]}
-        column={[`f_name`, 'email', 'date', (element) => { return getAssinees(element.assignee) }]}
+        headings={["Name", "Email", "Date updated", "Assigned To", "Actions"]}
+        column={[
+          `f_name`,
+          'email',
+          (element) => {
+            return element?.updatedAt ? moment(element?.updatedAt).format('MMM DD, YYYY') : ''
+          },
+          (element) => { return getAssinees(element.assignee) }
+        ]}
         data={data}
         title="Edit"
         componentTitle="Clients"
