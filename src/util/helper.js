@@ -1,5 +1,6 @@
 import { deleteClient } from "../store/thunk/client.thunk";
 import { deleteContractor } from "../store/thunk/contractor.thunk";
+import { deletePayment } from "../store/thunk/payment.thunk";
 export const formatDate = (dateString) => {
     const dateObject = new Date(dateString);
     const year = dateObject.getFullYear();
@@ -14,5 +15,7 @@ export const getDeleteDispatch = (id, dispatch, compTitle) => {
         dispatch(deleteClient({ id }))
     } else if (compTitle === 'Contractors') {
         dispatch(deleteContractor({ id }))
+    } else if (compTitle === 'Payments') {
+        dispatch(deletePayment({ id }))
     }
 }

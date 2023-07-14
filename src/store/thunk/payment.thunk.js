@@ -20,24 +20,30 @@ export const getPayments = createAsyncThunk("payments/getPayments", async (data,
   }
 });
 
-
-export const fecthClients = createAsyncThunk('payment/fecthClients', async (thunkAPI) => {
+export const deletePayment = createAsyncThunk("payments/deletePayment", async ({ id }, { dispatch }) => {
+  const token = localStorage.getItem("token");
   try {
-    const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/client`);
-    const resObj = response?.data.map((res) => ({ value: res._id, label: `${res?.f_name} ${res?.l_name}` }))
-    return resObj;
+    await axios.delete(`${process.env.REACT_APP_BASE_URL}/payment/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch(getPayments());
   } catch (error) {
     console.error(error);
-  };
+  }
 });
 
 
-export const addPayment = createAsyncThunk("payments/addClient", async (data) => {
+export const addPayment = createAsyncThunk("payments/addClient", async (data, { dispatch }) => {
+  const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/questions/getAll`, data);
-    // setSubmitting(false);
-    // console.log("Success", res?.data);
-    // toast.success("Sucessfully Added Quiz!");
+    const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/payment`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch(getPayments());
     return res?.data;
   } catch (error) {
     console.error(error);
