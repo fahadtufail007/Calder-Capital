@@ -9,23 +9,23 @@ const Table = ({ title, headings, data, setIsEditted, componentTitle, column = [
       <table className={styles.GeneratedTable}>
         <thead>
           <tr>
-            {headings.map((heading) => (
-              <th>{heading}</th>
+            {headings.map((heading, index) => (
+              <th key={index}>{heading}</th>
             ))}
           </tr>
         </thead>
 
         <tbody>
-          {data?.map((element) => {
+          {data?.map((element, index) => {
             return (
-              <tr>
-                {column.map(item => {
+              <tr key={index}>
+                {column.map((item, index) => {
                   if (typeof item == 'string') {
-                    return (<td>
+                    return (<td key={index}>
                       {element[item]}
                     </td>)
                   } else {
-                    return (<td>
+                    return (<td key={index}>
                       {item(element)}
                     </td>)
                   }

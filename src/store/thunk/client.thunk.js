@@ -4,7 +4,6 @@ import axios from "axios";
 export const getClients = createAsyncThunk("client/getClients", async () => {
   const token = localStorage.getItem("token");
   try {
-    console.log(process.env.REACT_APP_BASE_URL, 'process.env.REACT_APP_BASE_URL');
     const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/client`,
       {
         headers: {

@@ -66,7 +66,7 @@ const Sidebar = () => {
           </Link>
         </ul>
       </div>
-      <Link to="/" className={styles.links}>
+      <Link to="/" className={styles.links} onClick={() => localStorage.clear()}>
         <div className={styles.logoutButtton}>
           <img src={logoutIcon} alt="icon" />
           <div className={styles.logout}>Logout</div>

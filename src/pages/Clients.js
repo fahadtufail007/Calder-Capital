@@ -14,13 +14,14 @@ import { addClient, getClients, updateClient } from "../store/thunk/client.thunk
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import axios from "axios";
 import moment from 'moment';
+import { getContractors } from "../store/thunk/contractor.thunk";
 
 const Clients = () => {
   const assignedToOptions = useSelector(state => state.client.assignedTo)
   const data = useSelector(state => state.client.data)
+  const employees = useSelector(state => state.contractor.data)
 
   const [selectedOption, setSelectedOption] = useState([]);
-  const [employees, setEmployees] = useState([]);
   const [id, setId] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -56,7 +57,7 @@ const Clients = () => {
   }
   useEffect(() => {
     dispatch(getClients());
-    fetchEmployees();
+    dispatch(getContractors());
   }, [])
 
   useEffect(() => {
@@ -76,24 +77,9 @@ const Clients = () => {
     }
   }, [firstName, lastName, email, selectedOption, isEditted]);
 
-  const fetchEmployees = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/employee`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      setEmployees(res?.data)
-    } catch (error) {
-      console.log('err', error);
-    }
-  }
-
+  console.log(employees, 'employees');
   const getAssinees = (arr) => {
     let result = '';
-    console.log(arr, 'arrarr');
     arr.forEach((x, i) => {
       const emp = employees.find(y => y._id === x.employee_id)
       result = result + ` ${emp?.f_name} ${emp?.l_name} ${arr.length === i + 1 ? '' : ','}`
@@ -129,7 +115,7 @@ const Clients = () => {
           setValue={setEmail}
         />
         <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
-          {employees?.map(option => <option value={option._id}>{option.f_name + " " + option.l_name}</option>)}
+          {employees?.map(option => <option key={option._id} value={option._id}>{option.f_name + " " + option.l_name}</option>)}
         </SelectInput>
         {selectedOption.map((option) => {
           return <Assignees key={option.key} option={option} setSelected={setSelectedOption} />
