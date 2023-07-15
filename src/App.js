@@ -1,14 +1,13 @@
 import React, { useEffect } from "react";
-
-import { Routes, Route, useNavigate } from "react-router-dom";
-
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import styles from "./App.module.css";
 import Layout from "./layout/Layout";
 import { Clients, Login, Payments, Contractors, Earnings } from "./pages";
 import axios from "axios";
 
-function App() {
-  const navigate = useNavigate()
+function ProtectedRoute({ path, element }) {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       (response) => response,
@@ -28,15 +27,41 @@ function App() {
     };
   }, [navigate]);
 
+  const token = localStorage.getItem("token");
+  const isLoggedIn = !!token;
+
+  if (!isLoggedIn && path !== "/") {
+    return <Navigate to="/" replace />;
+  } else if (isLoggedIn && path === "/") {
+    console.log('getting there');
+    return <Navigate to="/clients" replace />;
+  } else {
+    return element;
+  }
+}
+
+function App() {
   return (
     <div className={styles.app}>
       <Layout>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/clients" element={<Clients />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/contractors" element={<Contractors />} />
-          <Route path="/earnings" element={<Earnings />} />
+          <Route path="/" element={<ProtectedRoute element={<Login />} path="/" />} />
+          <Route
+            path="/clients"
+            element={<ProtectedRoute element={<Clients />} path="/clients" />}
+          />
+          <Route
+            path="/payments"
+            element={<ProtectedRoute element={<Payments />} path="/payments" />}
+          />
+          <Route
+            path="/contractors"
+            element={<ProtectedRoute element={<Contractors />} path="/contractors" />}
+          />
+          <Route
+            path="/earnings"
+            element={<ProtectedRoute element={<Earnings />} path="/earnings" />}
+          />
         </Routes>
       </Layout>
     </div>
