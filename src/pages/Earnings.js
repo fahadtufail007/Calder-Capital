@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CSVLink } from "react-csv";
 import moment from "moment";
 
 import styles from "../styles/Earnings.module.css";
@@ -9,17 +10,25 @@ import totalRevenueIcon from "../assets/svgs/total-revenue-icon.svg";
 import monthlyRevenueIcon from "../assets/svgs/monthly-revenue-icon.svg";
 import clientsIcon from "../assets/svgs/avatar-icon.svg";
 import { getClients } from "../store/thunk/client.thunk";
-import { getEarnings } from "../store/thunk/earning.thunk";
+import { getCsvData, getEarnings } from "../store/thunk/earning.thunk";
 
 const Earnings = () => {
 
   const dispatch = useDispatch();
-  const { data } = useSelector(state => state.earning);
+  const { data, csvData } = useSelector(state => state.earning);
   const clients = useSelector(state => state.client.data)
+  const headers = [
+    "Clients",
+    "Clients Email",
+    "Last Date Updated",
+    "Commission Earned",
+    "Employee Share",
+  ]
 
   useEffect(() => {
     dispatch(getClients());
     dispatch(getEarnings());
+    dispatch(getCsvData());
   }, [])
 
   const getClientData = (id) => {
@@ -40,8 +49,6 @@ const Earnings = () => {
   const getFormatedDate = (date) => {
     return date ? moment(date).format('DD MMM, YYYY') : ''
   }
-
-  console.log(data, data?.earnings, 'data');
 
   return (
     <div className={styles.earningsContainer}>
@@ -95,7 +102,9 @@ const Earnings = () => {
         title="Download"
       />
       <div className={styles.earningsButtonWrapper}>
-        <Button title="Download in CSV" radius="16px" size="13px" />
+        <CSVLink data={csvData} headers={headers}>
+          <Button title="Download in CSV" radius="16px" size="13px" />
+        </CSVLink>
       </div>
     </div>
   );

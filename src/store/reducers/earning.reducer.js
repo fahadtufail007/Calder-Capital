@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getEarnings } from '../thunk/earning.thunk';
+import { getEarnings, getCsvData } from '../thunk/earning.thunk';
 
 const initialState = {
   data: {
@@ -9,6 +9,7 @@ const initialState = {
     name: "",
     email: ""
   },
+  csvData: [],
   laoding: false,
 };
 
@@ -32,6 +33,16 @@ export const earningReducer = createSlice({
       state.laoding = true;
     },
     [getEarnings.rejected]: (state) => {
+      state.laoding = false;
+    },
+    [getCsvData.fulfilled]: (state, { payload }) => {
+      state.csvData = payload;
+      state.laoding = false;
+    },
+    [getCsvData.pending]: (state) => {
+      state.laoding = true;
+    },
+    [getCsvData.rejected]: (state) => {
       state.laoding = false;
     }
   },

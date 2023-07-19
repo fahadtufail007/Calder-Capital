@@ -13,7 +13,20 @@ export const getEarnings = createAsyncThunk("earning/myEarnings", async (data, {
     if (res?.data) {
       dispatch(getClients());
     }
-    console.log(res?.data, 'this is data');
+    return res?.data;
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+export const getCsvData = createAsyncThunk("earning/myCsvData", async (data, { dispatch }) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/earning/myCsvData`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res?.data;
   } catch (error) {
     console.error(error);
@@ -34,20 +47,3 @@ export const deleteEarning = createAsyncThunk("earning/delete", async ({ id }, {
   }
 });
 
-// export const updatePayment = createAsyncThunk("payments/updatePayment", async ({ data, id }, { dispatch }) => {
-//   const token = localStorage.getItem("token");
-//   try {
-//     const res = await axios.put(`${process.env.REACT_APP_BASE_URL}/payment/${id}`, data,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-//     if (res?.data) {
-//       dispatch(getPayments());
-//     }
-//     return res?.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
