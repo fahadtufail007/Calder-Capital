@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
 
 export const login = createAsyncThunk('auth/login', async ({ email, password }) => {
+  console.log('base url ', process.env.REACT_APP_BASE_URL);
   try {
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`, { email, password });
-    const {token, role} = response.data.token;
+    const { token, role } = response.data.token;
     localStorage.setItem('token', token)
     localStorage.setItem('role', role)
     return response.data.token;
@@ -40,7 +41,7 @@ const authReducer = createSlice({
         state.error = action.error.message;
       });
   },
-}); 
+});
 
 export const { logOut, adminLogout } = authReducer.actions;
 export default authReducer.reducer;
