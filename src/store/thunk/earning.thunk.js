@@ -2,10 +2,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getClients } from "./client.thunk";
 import axios from "axios";
 
-export const getEarnings = createAsyncThunk("earning/myEarnings", async (data, { dispatch }) => {
+export const getEarnings = createAsyncThunk("earning/myEarnings", async (userId, { dispatch }) => {
+  // console.log(userId, "halso");
+
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/earning/myEarnings`, {
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/earning/myEarnings/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -19,10 +21,10 @@ export const getEarnings = createAsyncThunk("earning/myEarnings", async (data, {
   }
 });
 
-export const getCsvData = createAsyncThunk("earning/myCsvData", async (data, { dispatch }) => {
+export const getCsvData = createAsyncThunk("earning/myCsvData", async (userId, { dispatch }) => {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/earning/myCsvData`, {
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/earning/myCsvData/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

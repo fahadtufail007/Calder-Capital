@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from 'react-router-dom';
 import { CSVLink } from "react-csv";
 import moment from "moment";
 
@@ -13,7 +14,8 @@ import { getClients } from "../store/thunk/client.thunk";
 import { getCsvData, getEarnings } from "../store/thunk/earning.thunk";
 
 const Earnings = () => {
-
+  const { userId } = useParams();
+  console.log(userId, "userid X");
   const dispatch = useDispatch();
   const { data, csvData } = useSelector(state => state.earning);
   const clients = useSelector(state => state.client.data)
@@ -27,12 +29,13 @@ const Earnings = () => {
 
   useEffect(() => {
     dispatch(getClients());
-    dispatch(getEarnings());
-    dispatch(getCsvData());
+    dispatch(getEarnings(userId));
+    dispatch(getCsvData(userId));
   }, [])
 
   const getClientData = (id) => {
     const client = clients?.find((x) => x._id == id);
+    console.log(id, "client data");
     if (client) {
       return {
         name: `${client?.f_name} ${client?.l_name}`,

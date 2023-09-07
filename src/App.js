@@ -28,13 +28,19 @@ function ProtectedRoute({ path, element }) {
   }, [navigate]);
 
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
   const isLoggedIn = !!token;
-
+  const id = "";
   if (!isLoggedIn && path !== "/") {
     return <Navigate to="/" replace />;
   } else if (isLoggedIn && path === "/") {
     console.log('getting there');
-    return <Navigate to="/clients" replace />;
+    if (role == 'admin') {
+      return <Navigate to="/clients" replace />;
+    }
+    else {
+      return <Navigate to={`/earnings/${id}`} replace />
+    }
   } else {
     return element;
   }
@@ -59,7 +65,7 @@ function App() {
             element={<ProtectedRoute element={<Contractors />} path="/contractors" />}
           />
           <Route
-            path="/earnings"
+            path="/earnings/:userId"
             element={<ProtectedRoute element={<Earnings />} path="/earnings" />}
           />
         </Routes>

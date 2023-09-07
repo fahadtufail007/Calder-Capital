@@ -3,6 +3,8 @@ import axios from "axios";
 
 export const getContractors = createAsyncThunk("employee/getContractors", async () => {
   const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("role");
+
   try {
     const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/employee`,
       {
@@ -10,7 +12,12 @@ export const getContractors = createAsyncThunk("employee/getContractors", async 
           Authorization: `Bearer ${token}`,
         },
       });
-    return res?.data;
+
+    const filteredData = res?.data?.filter((item) => {
+      return item?.role !== "admin";
+    });
+
+    return filteredData;
   } catch (error) {
     console.error(error);
   }

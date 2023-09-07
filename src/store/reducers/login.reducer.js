@@ -5,9 +5,12 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }) 
   console.log('base url ', process.env.REACT_APP_BASE_URL);
   try {
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/login`, { email, password });
-    const { token, role } = response.data.token;
+    // console.log(response, "faheem");
+    const { token, role, user } = response.data.token;
     localStorage.setItem('token', token)
     localStorage.setItem('role', role)
+    localStorage.setItem('userId', user._id);
+    // console.log(user._id, "idssss");
     return response.data.token;
   } catch (error) {
     throw new Error(error.response.data.message);

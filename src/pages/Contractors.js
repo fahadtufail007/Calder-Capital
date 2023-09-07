@@ -75,7 +75,7 @@ const Contractors = () => {
 
   return (
     <div className={styles.contractorsContainer}>
-      <Modal modalTitle="Employee" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
+      <Modal modalTitle="Contractor" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
         <TextInput
           label="First Name "
           star="*"

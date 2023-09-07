@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,18 +18,21 @@ const Login = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   // const currState = useSelector((state) => state.auth);
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isButtonDisabled = !email || !password || !email.match(emailRegex);
-  
-  const handleLogin = () => {
-    dispatch(login( {email, password}))
-  }
 
+  const handleLogin = () => {
+
+    dispatch(login({ email, password }))
+  }
+  const role = localStorage.getItem('role');
   if (isLoggedIn) {
     // if (currState.token.role == "admin") {
-    //   console.log("currState", currState);
-      navigate("/clients");
+    const userId = localStorage.getItem('userId');
+    if (role == 'admin') { navigate("/clients"); }
+    else {
+      navigate(`/earnings/${userId}`)
+    }
     // }  
   }
 
@@ -44,7 +47,7 @@ const Login = () => {
       <div className={`col-6 ${styles.rightSide}`}>
         <div className={styles.loginForm}>
           <div className={styles.login}>Log In</div>
-          <TextInput label="Email" type="email" placeholder="Email"  value={email} setValue={setEmail}/>
+          <TextInput label="Email" type="email" placeholder="Email" value={email} setValue={setEmail} />
           <TextInput label="Password" type="password" placeholder="Password" value={password} setValue={setPassword} />
           <div className={styles.checkboxWrapper}>
             <div className={styles.rememberMe}>Remember Me</div>
@@ -55,10 +58,10 @@ const Login = () => {
               id="flexCheckDefault"
             />
           </div>
-            <Button title="Login" onClick={handleLogin} disabled={loading}>
-              {loading ? 'Loading...' : 'Login'}
-            </Button>
-            {error && <p>{error}</p>}
+          <Button title="Login" onClick={handleLogin} disabled={loading}>
+            {loading ? 'Loading...' : 'Login'}
+          </Button>
+          {error && <p>{error}</p>}
         </div>
       </div>
     </div>

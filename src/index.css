@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -31,6 +32,7 @@ code {
   text-align: left;
   padding: 12px 15px !important;
 }
+
 .dropdown-menu {
   border: none !important;
   padding: 0px 0px !important;
@@ -38,16 +40,19 @@ code {
   border-radius: 10px !important;
   margin-top: 5px !important;
 }
+
 .dropdown-item:hover {
   border-radius: 10px !important;
   background-color: var(--dark-grey-clor) !important;
   color: var(--black-color);
 }
+
 .modal-content {
   border: none !important;
   outline: none !important;
   border-radius: 24px !important;
 }
+
 .modal-body {
   padding: 0px !important;
   border-radius: 24px !important;

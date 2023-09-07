@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styles from "./Sidebar.module.css";
 import menuIcon from "../../assets/svgs/menu-icon.svg";
@@ -12,6 +12,9 @@ import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
+  const role = localStorage.getItem('role');
+  const userId = localStorage.getItem('userId');
+
   return (
     <nav className={styles.sidebar}>
       <div>
@@ -20,7 +23,7 @@ const Sidebar = () => {
           <img src={menuIcon} alt="icon" />
         </div>
         <ul className={styles.sideNav}>
-          <Link to="/clients" className={styles.links}>
+          {role == 'admin' && <Link to="/clients" className={styles.links}>
             <li
               className={
                 location.pathname === "/clients"
@@ -30,19 +33,20 @@ const Sidebar = () => {
               <img src={clientsIcon} alt="icon" />
               <span>Clients</span>
             </li>
-          </Link>
-          <Link to="/payments" className={styles.links}>
-            <li
-              className={
-                location.pathname === "/payments"
-                  ? styles.sideNavItemActive
-                  : styles.sideNavItem
-              }>
-              <img src={paymentIcon} alt="icon" />
-              <span>Payments</span>
-            </li>
-          </Link>
-          <Link to="/contractors" className={styles.links}>
+          </Link>}
+          {role == 'admin' &&
+            <Link to="/payments" className={styles.links}>
+              <li
+                className={
+                  location.pathname === "/payments"
+                    ? styles.sideNavItemActive
+                    : styles.sideNavItem
+                }>
+                <img src={paymentIcon} alt="icon" />
+                <span>Payments</span>
+              </li>
+            </Link>}
+          {role == 'admin' && <Link to="/contractors" className={styles.links}>
             <li
               className={
                 location.pathname === "/contractors"
@@ -52,18 +56,18 @@ const Sidebar = () => {
               <img src={contractorsIcon} alt="icon" />
               <span>Contractors</span>
             </li>
-          </Link>
-          <Link to="/earnings" className={styles.links}>
+          </Link>}
+          {role != 'admin' && <Link to={`/earnings/${userId}`} className={styles.links}>
             <li
               className={
-                location.pathname === "/earnings"
+                location.pathname === `/earnings/${userId}`
                   ? styles.sideNavItemActive
                   : styles.sideNavItem
               }>
               <img src={earningsIcon} alt="icon" />
               <span>My Earnings</span>
             </li>
-          </Link>
+          </Link>}
         </ul>
       </div>
       <Link to="/" className={styles.links} onClick={() => localStorage.clear()}>
@@ -72,7 +76,7 @@ const Sidebar = () => {
           <div className={styles.logout}>Logout</div>
         </div>
       </Link>
-    </nav>
+    </nav >
   );
 };
 

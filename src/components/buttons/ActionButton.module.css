@@ -8,6 +8,7 @@
   cursor: pointer;
   border: 1px solid var(--ofwhite-color);
 }
+
 .buttonTitle {
   font-size: 14px;
   font-weight: 500;
@@ -15,4 +16,8 @@
   letter-spacing: 0em;
   text-align: left;
   color: var(--light-grey-color);
+}
+
+.links {
+  text-decoration: none;
 }
