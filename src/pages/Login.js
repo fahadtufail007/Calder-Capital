@@ -25,11 +25,12 @@ const Login = () => {
 
     dispatch(login({ email, password }))
   }
+
   const role = localStorage.getItem('role');
   if (isLoggedIn) {
     // if (currState.token.role == "admin") {
     const userId = localStorage.getItem('userId');
-    if (role == 'admin') { navigate("/clients"); }
+    if (role === 'admin') { navigate("/clients"); }
     else {
       navigate(`/earnings/${userId}`)
     }
@@ -58,10 +59,10 @@ const Login = () => {
               id="flexCheckDefault"
             />
           </div>
-          <Button title="Login" onClick={handleLogin} disabled={loading}>
+          <Button title={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={isButtonDisabled || loading}>
             {loading ? 'Loading...' : 'Login'}
           </Button>
-          {error && <p>{error}</p>}
+          {error && <p className={styles.error}>{error}</p>}
         </div>
       </div>
     </div>

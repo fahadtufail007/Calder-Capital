@@ -23,7 +23,7 @@ const Sidebar = () => {
           <img src={menuIcon} alt="icon" />
         </div>
         <ul className={styles.sideNav}>
-          {role == 'admin' && <Link to="/clients" className={styles.links}>
+          {role === 'admin' && <Link to="/clients" className={styles.links}>
             <li
               className={
                 location.pathname === "/clients"
@@ -34,7 +34,7 @@ const Sidebar = () => {
               <span>Clients</span>
             </li>
           </Link>}
-          {role == 'admin' &&
+          {role === 'admin' &&
             <Link to="/payments" className={styles.links}>
               <li
                 className={
@@ -46,7 +46,7 @@ const Sidebar = () => {
                 <span>Payments</span>
               </li>
             </Link>}
-          {role == 'admin' && <Link to="/contractors" className={styles.links}>
+          {role === 'admin' && <Link to="/contractors" className={styles.links}>
             <li
               className={
                 location.pathname === "/contractors"
@@ -57,7 +57,7 @@ const Sidebar = () => {
               <span>Contractors</span>
             </li>
           </Link>}
-          {role != 'admin' && <Link to={`/earnings/${userId}`} className={styles.links}>
+          {role !== 'admin' && <Link to={`/earnings/${userId}`} className={styles.links}>
             <li
               className={
                 location.pathname === `/earnings/${userId}`

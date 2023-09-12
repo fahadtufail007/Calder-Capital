@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getClients } from '../thunk/client.thunk';
+// import { getClients } from '../thunk/client.thunk';
 import { getContractors } from '../thunk/contractor.thunk';
 
 const initialState = {

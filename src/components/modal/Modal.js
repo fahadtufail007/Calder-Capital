@@ -4,7 +4,7 @@ import styles from "./Modal.module.css";
 
 import Button from "../buttons/Button";
 
-const Modal = ({ children, modalTitle, onClick, disable, createUpdateFlag }) => {
+const Modal = ({ children, modalTitle, btnTitle, onClick, disable, createUpdateFlag }) => {
   return (
     <div>
       <button
@@ -33,7 +33,7 @@ const Modal = ({ children, modalTitle, onClick, disable, createUpdateFlag }) => 
                   data-bs-dismiss="modal"
                   className={styles.modalButtonWarpper}>
                   {createUpdateFlag ? <Button
-                    title="Create"
+                    title={btnTitle || "Create"}
                     radius="10px"
                     size="15px"
                     height="36px"
@@ -47,6 +47,7 @@ const Modal = ({ children, modalTitle, onClick, disable, createUpdateFlag }) => 
                     onClick={onClick}
                     disabled={disable}
                   />}
+                  {disable && <span className={styles.tooltiptext}>First fill above fields</span>}
                 </div>
               </div>
             </div>

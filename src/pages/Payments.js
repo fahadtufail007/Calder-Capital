@@ -161,7 +161,7 @@ const Payments = () => {
     return (
       assignees?.map((assignee) => (
         <div key={assignee?.employee_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 5 }}>
-          <span>{(assignee?.employee_percentage / 100) * payment} USD</span>
+          <span>{((assignee?.employee_percentage / 100) * payment).toFixed(2)} USD</span>
         </div>
       ))
     );
@@ -192,7 +192,6 @@ const Payments = () => {
       <Modal modalTitle="Payment" disable={isButtonDisabled} onClick={handleAddPayment} createUpdateFlag={createUpdateFlag}>
         <Select
           className={styles.reactSelectSingle}
-          // classNamePrefix="Client Name"  
           styles={customStyles}
           label="Client Name"
           placeholder="Client Name"

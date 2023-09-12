@@ -4,6 +4,7 @@
   align-items: flex-end;
   flex-direction: column;
 }
+
 .leftSide {
   display: flex;
   align-items: center;
@@ -11,6 +12,7 @@
   flex-direction: column;
   height: 100vh;
 }
+
 .rightSide {
   background-color: var(--metalic-blue-color);
   display: flex;
@@ -19,6 +21,7 @@
   flex-direction: column;
   height: 100vh;
 }
+
 .code {
   font-size: 29px;
   font-weight: 700;
@@ -28,6 +31,7 @@
   margin-top: -10px;
   color: var(--metalic-blue-color);
 }
+
 .loginForm {
   background-color: var(--white-color);
   padding: 80px 40px;
@@ -35,6 +39,7 @@
   border-radius: 38px;
   width: 440px;
 }
+
 .login {
   font-size: 24px;
   font-weight: 700;
@@ -44,6 +49,7 @@
   margin-bottom: 60px;
   color: var(--dark-blue-color);
 }
+
 .rememberMe {
   font-size: 14px;
   font-weight: 400;
@@ -52,10 +58,15 @@
   color: var(--grey-color);
   margin-top: 2px;
 }
+
 .checkboxWrapper {
   display: flex;
   align-items: center;
   gap: 5px;
   margin-bottom: 50px;
   margin-top: -10px;
+}
+
+.error {
+  color: rgb(204, 21, 21);
 }

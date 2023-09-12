@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 export const getClients = createAsyncThunk("client/getClients", async () => {
   const token = localStorage.getItem("token");
@@ -24,15 +25,17 @@ export const addClient = createAsyncThunk("client/addClient", async (data, { dis
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
     if (res?.data) {
       dispatch(getClients());
+      toast("Client added successfully", { type: "success" })
     }
 
     return res?.data;
   } catch (error) {
     console.error(error);
+    toast(`Failed to add client: ${error.message}`, { type: "error" })
   }
 });
 
@@ -50,10 +53,12 @@ export const updateClient = createAsyncThunk("client/updateClient", async ({ dat
       });
     if (res?.data) {
       dispatch(getClients());
+      toast("Client updated successfully", { type: "success" })
     }
     return res?.data;
   } catch (error) {
     console.error(error);
+    toast(`Failed to update client: ${error.message}`, { type: "error" })
   }
 });
 
@@ -66,7 +71,11 @@ export const deleteClient = createAsyncThunk("client/deleteClient", async ({ id 
       },
     });
     dispatch(getClients());
+    toast("Client updated successfully", { type: "success" })
+
   } catch (error) {
     console.error(error);
+    toast(`Failed to update client: ${error.message}`, { type: "error" })
+
   }
 });

@@ -4,6 +4,8 @@ import styles from "./App.module.css";
 import Layout from "./layout/Layout";
 import { Clients, Login, Payments, Contractors, Earnings } from "./pages";
 import axios from "axios";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ProtectedRoute({ path, element }) {
   const navigate = useNavigate();
@@ -29,8 +31,9 @@ function ProtectedRoute({ path, element }) {
 
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
+  const userId = localStorage.getItem("userId");
   const isLoggedIn = !!token;
-  const id = "";
+
   if (!isLoggedIn && path !== "/") {
     return <Navigate to="/" replace />;
   } else if (isLoggedIn && path === "/") {
@@ -39,7 +42,7 @@ function ProtectedRoute({ path, element }) {
       return <Navigate to="/clients" replace />;
     }
     else {
-      return <Navigate to={`/earnings/${id}`} replace />
+      return <Navigate to={`/earnings/${userId}`} replace />
     }
   } else {
     return element;
@@ -70,6 +73,7 @@ function App() {
           />
         </Routes>
       </Layout>
+      <ToastContainer />
     </div>
   );
 }

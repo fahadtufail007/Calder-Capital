@@ -38,9 +38,9 @@ const Clients = () => {
     const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
     const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
     const isEmailValid = emailRegex.test(email); // Check if email matches the email format
-    // const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
+    const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
 
-    const isValid = isFirstNameValid && isLastNameValid && isEmailValid;
+    const isValid = isFirstNameValid && isLastNameValid && isEmailValid && isSelectedOptionValid;
     setIsButtonDisabled(!isValid);
   };
 
@@ -88,7 +88,7 @@ const Clients = () => {
   }
   return (
     <div className={styles.clientsContainer}>
-      <Modal modalTitle={"Client"} onClick={addUpdateClient} disable={false} createUpdateFlag={createUpdateFlag}>
+      <Modal modalTitle={"Client"} btnTitle={"Add Client"} onClick={addUpdateClient} disable={isButtonDisabled} createUpdateFlag={createUpdateFlag}>
         <TextInput
           label="First Name"
           star="*"

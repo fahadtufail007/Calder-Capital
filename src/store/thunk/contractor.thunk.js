@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 export const getContractors = createAsyncThunk("employee/getContractors", async () => {
   const token = localStorage.getItem("token");
-  const userRole = localStorage.getItem("role");
+  // const userRole = localStorage.getItem("role");
 
   try {
     const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/employee`,
@@ -35,11 +36,13 @@ export const addContractor = createAsyncThunk("employee/addEmployee", async (dat
 
     if (res?.data) {
       dispatch(getContractors());
+      toast("Contractor added successfully", { type: "success" })
     }
 
     return res?.data;
   } catch (error) {
     console.error(error);
+    toast(`Failed to add contractor: ${error.message}`, { type: "error" })
   }
 });
 
@@ -55,10 +58,13 @@ export const updateContractor = createAsyncThunk("employee/updateContractot", as
       });
     if (res?.data) {
       dispatch(getContractors());
+      toast("Contractor updated successfully", { type: "success" })
+
     }
     return res?.data;
   } catch (error) {
     console.error(error);
+    toast(`Failed to update contractor: ${error.message}`, { type: "error" })
   }
 });
 
@@ -71,7 +77,9 @@ export const deleteContractor = createAsyncThunk("employee/deleteContractor", as
       },
     });
     dispatch(getContractors());
+    toast("Contractor deleted successfully", { type: "success" })
   } catch (error) {
     console.error(error);
+    toast(`Failed to delete contractor: ${error.message}`, { type: "error" })
   }
 });
