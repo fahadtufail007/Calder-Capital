@@ -71,11 +71,11 @@ export const deleteClient = createAsyncThunk("client/deleteClient", async ({ id 
       },
     });
     dispatch(getClients());
-    toast("Client updated successfully", { type: "success" })
+    toast("Client deleted successfully", { type: "success" })
 
   } catch (error) {
     console.error(error);
-    toast(`Failed to update client: ${error.message}`, { type: "error" })
+    toast(`Failed to delete client: ${error.message}`, { type: "error" })
 
   }
 });

@@ -8,14 +8,15 @@ import styles from "../styles/Earnings.module.css";
 import { Button, RevenueCard, Table } from "../components";
 
 import totalRevenueIcon from "../assets/svgs/total-revenue-icon.svg";
-import monthlyRevenueIcon from "../assets/svgs/monthly-revenue-icon.svg";
+// import monthlyRevenueIcon from "../assets/svgs/monthly-revenue-icon.svg";
 import clientsIcon from "../assets/svgs/avatar-icon.svg";
 import { getClients } from "../store/thunk/client.thunk";
 import { getCsvData, getEarnings } from "../store/thunk/earning.thunk";
+import { toast } from 'react-toastify';
 
 const Earnings = () => {
   const { userId } = useParams();
-  console.log(userId, "userid X");
+  // console.log(userId, "userid X");
   const dispatch = useDispatch();
   const { data, csvData } = useSelector(state => state.earning);
   const clients = useSelector(state => state.client.data)
@@ -26,7 +27,9 @@ const Earnings = () => {
     "Commission Earned",
     "Employee Share",
   ]
-
+  function handleCsvDownload() {
+    toast("Cvs downloaded successfully", { type: "success" })
+  }
   useEffect(() => {
     dispatch(getClients());
     dispatch(getEarnings(userId));
@@ -102,10 +105,9 @@ const Earnings = () => {
             return `${element.employeeShare} %`
           },
         ]}
-        title="Download"
       />
       <div className={styles.earningsButtonWrapper}>
-        <CSVLink data={csvData} headers={headers}>
+        <CSVLink data={csvData} headers={headers} onClick={handleCsvDownload}>
           <Button title="Download in CSV" radius="16px" size="13px" />
         </CSVLink>
       </div>

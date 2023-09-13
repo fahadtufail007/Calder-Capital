@@ -9,11 +9,20 @@ import contractorsIcon from "../../assets/svgs/contractors-icon.svg";
 import earningsIcon from "../../assets/svgs/earning-icon.svg";
 
 import { Link, useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/reducers/login.reducer";
 
 const Sidebar = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const role = localStorage.getItem('role');
   const userId = localStorage.getItem('userId');
+
+  function handleLogout() {
+    dispatch(logout());
+    toast("Loggedout successfully", { type: "success" })
+  }
 
   return (
     <nav className={styles.sidebar}>
@@ -70,7 +79,7 @@ const Sidebar = () => {
           </Link>}
         </ul>
       </div>
-      <Link to="/" className={styles.links} onClick={() => localStorage.clear()}>
+      <Link to="/" className={styles.links} onClick={handleLogout}>
         <div className={styles.logoutButtton}>
           <img src={logoutIcon} alt="icon" />
           <div className={styles.logout}>Logout</div>

@@ -22,11 +22,11 @@ const ActionButton = ({ onClick, title, id, componentTitle }) => {
       </div>
 
       <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li>
+        {componentTitle !== 'Earnings' && <li>
           <button onClick={onClick} className="dropdown-item">
             {title}
           </button>
-        </li>
+        </li>}
         <li>
           <button className="dropdown-item" onClick={() => getDeleteDispatch(id, dispatch, componentTitle)}>Delete</button>
         </li>

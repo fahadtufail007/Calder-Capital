@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getClients } from "./client.thunk";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 export const getEarnings = createAsyncThunk("earning/myEarnings", async (userId, { dispatch }) => {
   // console.log(userId, "halso");
@@ -32,6 +33,7 @@ export const getCsvData = createAsyncThunk("earning/myCsvData", async (userId, {
     return res?.data;
   } catch (error) {
     console.error(error);
+    toast(`Failed to download csv: ${error.message}`, { type: "error" })
   }
 });
 
@@ -44,8 +46,10 @@ export const deleteEarning = createAsyncThunk("earning/delete", async ({ id }, {
       },
     });
     dispatch(getEarnings());
+    toast("Earning deleted successfully", { type: "success" })
   } catch (error) {
     console.error(error);
+    toast(`Failed to delete earning: ${error.message}`, { type: "error" })
   }
 });
 

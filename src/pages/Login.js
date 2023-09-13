@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
   const loading = useSelector((state) => state.auth.loading);
-  const error = useSelector((state) => state.auth.error);
+  // const error = useSelector((state) => state.auth.error);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   // const currState = useSelector((state) => state.auth);
@@ -23,19 +23,20 @@ const Login = () => {
 
   const handleLogin = () => {
 
-    dispatch(login({ email, password }))
+    dispatch(login({ email, password, }))
   }
-
-  const role = localStorage.getItem('role');
-  if (isLoggedIn) {
-    // if (currState.token.role == "admin") {
-    const userId = localStorage.getItem('userId');
-    if (role === 'admin') { navigate("/clients"); }
-    else {
-      navigate(`/earnings/${userId}`)
+  useEffect(() => {
+    const role = localStorage.getItem('role');
+    if (isLoggedIn) {
+      // if (currState.token.role == "admin") {
+      const userId = localStorage.getItem('userId');
+      if (role === 'admin') { navigate("/clients"); }
+      else {
+        navigate(`/earnings/${userId}`)
+      }
+      // }
     }
-    // }  
-  }
+  }, [isLoggedIn])
 
   return (
     <div className="row">
@@ -62,7 +63,7 @@ const Login = () => {
           <Button title={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={isButtonDisabled || loading}>
             {loading ? 'Loading...' : 'Login'}
           </Button>
-          {error && <p className={styles.error}>{error}</p>}
+          {/* {error && <p className={styles.error}>{error}</p>} */}
         </div>
       </div>
     </div>
