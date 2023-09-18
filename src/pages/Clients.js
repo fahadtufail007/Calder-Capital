@@ -36,11 +36,11 @@ const Clients = () => {
 
     // Perform your validation checks here
     const isFirstNameValid = /^[a-zA-Z\s]+$/.test(firstName); // Check if firstName contains only letters
-    const isLastNameValid = /^[a-zA-Z\s]+$/.test(lastName); // Check if lastName contains only letters
+    // const isLastNameValid = /^[a-zA-Z\s]+$/.test(lastName); // Check if lastName contains only letters
     const isEmailValid = emailRegex.test(email); // Check if email matches the email format
     const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
 
-    const isValid = isFirstNameValid && isLastNameValid && isEmailValid && isSelectedOptionValid;
+    const isValid = isFirstNameValid && isSelectedOptionValid;
     setIsButtonDisabled(!isValid);
   };
 
@@ -90,29 +90,29 @@ const Clients = () => {
     <div className={styles.clientsContainer}>
       <Modal modalTitle={"Client"} btnTitle={"Add Client"} onClick={addUpdateClient} disable={isButtonDisabled} createUpdateFlag={createUpdateFlag}>
         <TextInput
-          label="First Name"
+          label="Client Name"
           star="*"
-          placeholder="First Name"
+          placeholder="Client Name"
           type="text"
           setValue={setFirstName}
           value={firstName}
         />
-        <TextInput
+        {/* <TextInput
           label="Last Name"
           star="*"
           placeholder="Last Name"
           type="text"
           setValue={setLastName}
           value={lastName}
-        />
-        <TextInput
+        /> */}
+        {/* <TextInput
           label="Email Address"
           star="*"
           placeholder="Email Address"
           type="email"
           value={email}
           setValue={setEmail}
-        />
+        /> */}
         <SelectInput setSelected={setSelectedOption} selected={selectedOption}>
           {employees?.map(option => <option key={option._id} value={option._id}>{option.f_name + " " + option.l_name}</option>)}
         </SelectInput>

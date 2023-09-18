@@ -77,9 +77,9 @@ const Contractors = () => {
     <div className={styles.contractorsContainer}>
       <Modal passwordValidate={isPasswordMatched} modalTitle="Contractor" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
         <TextInput
-          label="First Name "
+          label="Contractor Name "
           star="*"
-          placeholder="Name"
+          placeholder="Contractor Name"
           type="text"
           value={firstName}
           setValue={setFirstName}

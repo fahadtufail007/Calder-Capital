@@ -48,7 +48,7 @@ const Modal = ({ children, modalTitle, btnTitle, onClick, disable, createUpdateF
                     disabled={disable}
                   />}
                   {disable && <span className={styles.tooltiptext}>First fill above fields</span>}
-                  {!passwordValidate && !disable && <span className={styles.tooltiptext}>Password not match</span>}
+                  {modalTitle === 'Contractor' && !passwordValidate && !disable && <span className={styles.tooltiptext}>Password not match</span>}
                 </div>
               </div>
             </div>
