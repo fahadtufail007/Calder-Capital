@@ -38,18 +38,18 @@ const Contractors = () => {
     }
   }, [firstName, lastName, email, isEditted, password, confirmPassword]);
 
+  const isPasswordMatched = password.length > 0 && password === confirmPassword;
   const validateForm = () => {
     const emailRegex = /^\S+@\S+\.\S+$/; // Regular expression for email format
 
     // Perform your validation checks here
-    const isFirstNameValid = /^[a-zA-Z]+$/.test(firstName); // Check if firstName contains only letters
-    const isLastNameValid = /^[a-zA-Z]+$/.test(lastName); // Check if lastName contains only letters
+    const isFirstNameValid = /^[a-zA-Z\s]+$/.test(firstName); // Check if firstName contains only letters
+    // const isLastNameValid = /^[a-zA-Z\s]+$/.test(lastName); // Check if lastName contains only letters
     const isEmailValid = emailRegex.test(email); // Check if email matches the email format
-    const isPasswordMatched = password.length > 0 && password === confirmPassword;
 
     // const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
 
-    const isValid = isFirstNameValid && isLastNameValid && isEmailValid && isPasswordMatched;
+    const isValid = isFirstNameValid && isEmailValid && password.length > 0;
     setIsButtonDisabled(!isValid);
   };
 
@@ -75,23 +75,23 @@ const Contractors = () => {
 
   return (
     <div className={styles.contractorsContainer}>
-      <Modal modalTitle="Contractor" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
+      <Modal passwordValidate={isPasswordMatched} modalTitle="Contractor" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
         <TextInput
           label="First Name "
           star="*"
-          placeholder="First Name"
+          placeholder="Name"
           type="text"
           value={firstName}
           setValue={setFirstName}
         />
-        <TextInput
+        {/* <TextInput
           label="Last Name"
           star="*"
           placeholder="Last Name"
           type="text"
           value={lastName}
           setValue={setLastName}
-        />
+        /> */}
         <TextInput
           label="Email Address"
           star="*"

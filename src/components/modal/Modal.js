@@ -4,7 +4,7 @@ import styles from "./Modal.module.css";
 
 import Button from "../buttons/Button";
 
-const Modal = ({ children, modalTitle, btnTitle, onClick, disable, createUpdateFlag }) => {
+const Modal = ({ children, modalTitle, btnTitle, onClick, disable, createUpdateFlag, passwordValidate }) => {
   return (
     <div>
       <button
@@ -48,6 +48,7 @@ const Modal = ({ children, modalTitle, btnTitle, onClick, disable, createUpdateF
                     disabled={disable}
                   />}
                   {disable && <span className={styles.tooltiptext}>First fill above fields</span>}
+                  {!passwordValidate && !disable && <span className={styles.tooltiptext}>Password not match</span>}
                 </div>
               </div>
             </div>
