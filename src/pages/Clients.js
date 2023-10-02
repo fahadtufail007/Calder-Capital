@@ -35,9 +35,9 @@ const Clients = () => {
     const emailRegex = /^\S+@\S+\.\S+$/; // Regular expression for email format
 
     // Perform your validation checks here
-    const isFirstNameValid = /^[a-zA-Z\s]+$/.test(firstName); // Check if firstName contains only letters
+    const isFirstNameValid = /^[a-zA-Z0-9\s]+$/.test(firstName); // Check if firstName contains letters, number and spaces
     // const isLastNameValid = /^[a-zA-Z\s]+$/.test(lastName); // Check if lastName contains only letters
-    const isEmailValid = emailRegex.test(email); // Check if email matches the email format
+    // const isEmailValid = emailRegex.test(email); // Check if email matches the email format
     const isSelectedOptionValid = Object.keys(selectedOption).length > 0; // Check if selectedOption is not empty
 
     const isValid = isFirstNameValid && isSelectedOptionValid;
