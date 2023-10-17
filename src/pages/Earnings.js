@@ -66,9 +66,10 @@ const Earnings = () => {
         <div className={styles.revenueCards}>
           <RevenueCard
             title="Total Revenue"
-            revenue={`${data?.totalEarning}`}
+            revenue={data?.totalEarning ? parseFloat(data.totalEarning).toFixed(2) : "N/A"}
             icon={totalRevenueIcon}
           />
+
           {/* <RevenueCard
             title="Monthly Revenue"
             revenue="$25k"
@@ -83,7 +84,7 @@ const Earnings = () => {
           "Client Email",
           "Last Date Updated",
           "Commission Earned",
-          "Employee Share",
+          "Contractor Share",
           "Actions",
         ]}
         componentTitle="Earnings"
@@ -99,7 +100,7 @@ const Earnings = () => {
             return getFormatedDate(element.updatedAt)
           },
           (element) => {
-            return `$ ${element.employeeAmount}`
+            return `$ ${parseFloat(element.employeeAmount).toFixed(2)}`;
           },
           (element) => {
             return `${element.employeeShare} %`

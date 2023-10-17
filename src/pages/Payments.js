@@ -3,7 +3,8 @@ import moment from 'moment';
 import Select from 'react-select';
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-
+import { CSVLink } from "react-csv";
+import { toast } from 'react-toastify';
 import {
   AddNewButton,
   Table,
@@ -19,7 +20,6 @@ import { getContractors } from "../store/thunk/contractor.thunk";
 import { getClients } from "../store/thunk/client.thunk";
 
 const Payments = () => {
-
   const dispatch = useDispatch()
   const options = [];
   const payments = useSelector(state => state.payment.payments)
@@ -38,6 +38,17 @@ const Payments = () => {
   const [payment, setPayment] = useState()
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  // const headers = [
+  //   "Clients",
+  //   "Clients Email",
+  //   "Last Date Updated",
+  //   "Commission Earned",
+  //   "Employee Share",
+  // ]
+
+  // function handleCsvDownload() {
+  //   toast("Cvs downloaded successfully", { type: "success" })
+  // }
 
   useEffect(() => {
     dispatch(getPayments());
@@ -115,16 +126,16 @@ const Payments = () => {
 
   const validateForm = () => {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Regular expression for yyyy-mm-dd format
-    const paymentRegex = /^\d+$/; // Regular expression for alphabetic characters and spaces only
+    const paymentRegex = /^\d+(\.\d{1,2})?$/;    // Regular expression for alphabetic characters and spaces only
 
     const isValidStartDate = dateRegex.test(dateStart);
     const isValidEndDate = dateRegex.test(dateEnd);
     const isValidPayment = paymentRegex.test(payment);
     const isValidName = clientId !== ''
 
-    const areOptionsSelected = selectedOption.length > 0;
+    // const areOptionsSelected = selectedOption.length > 0;
     const isStartDateBeforeEndDate = isValidStartDate && isValidEndDate && new Date(dateStart) < new Date(dateEnd);
-    const isValid = (isStartDateBeforeEndDate && isValidPayment && isValidName && areOptionsSelected);
+    const isValid = (isValidName && isStartDateBeforeEndDate && isValidPayment);
     setIsButtonDisabled(!isValid);
   };
 
@@ -186,6 +197,7 @@ const Payments = () => {
       minHeight: 45, // Set your desired height
     }),
   };
+
 
   return (
     <div className={styles.paymentsContainer}>
@@ -250,12 +262,13 @@ const Payments = () => {
           "Actions",
         ]}
         column={[
-          (element) => { return getClientName(element?.clientId) },
-          (element) => { return `${getFormatedDate(element.dateStart)} -- ${getFormatedDate(element.dateEnd)}` },
-          'payment',
-          (element) => { return renderEmployeeList(element?.assignee) },
-          (element) => { return renderEmployeeAmount(element?.assignee, element?.payment) },
+          (element) => getClientName(element?.clientId),
+          (element) => `${getFormatedDate(element.dateStart)} -- ${getFormatedDate(element.dateEnd)}`,
+          (element) => parseFloat(element.payment).toFixed(2),
+          (element) => renderEmployeeList(element?.assignee),
+          (element) => renderEmployeeAmount(element?.assignee, element?.payment),
         ]}
+
         data={payments}
         title="Edit"
         componentTitle="Payments"
@@ -265,7 +278,9 @@ const Payments = () => {
         }}
       />
       <div className={styles.paymentButtonWrapper}>
+        {/* <CSVLink data={csvData} headers={headers}> */}
         <Button title="Download in CSV" radius="16px" size="13px" />
+        {/* </CSVLink> */}
       </div>
     </div>
   );

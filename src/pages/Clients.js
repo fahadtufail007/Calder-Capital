@@ -20,7 +20,7 @@ const Clients = () => {
   const assignedToOptions = useSelector(state => state.client.assignedTo)
   const data = useSelector(state => state.client.data)
   const employees = useSelector(state => state.contractor.data)
-
+  // console.log(data[0]?.f_name, "       dataaaaaaaa");
   const [selectedOption, setSelectedOption] = useState([]);
   const [id, setId] = useState("")
   const [firstName, setFirstName] = useState("")
@@ -30,6 +30,7 @@ const Clients = () => {
   const [isEditted, setIsEditted] = useState({});
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const dispatch = useDispatch()
+  const [searchData, setSearchData] = useState(data);
 
   const validateForm = () => {
     const emailRegex = /^\S+@\S+\.\S+$/; // Regular expression for email format
@@ -86,6 +87,18 @@ const Clients = () => {
     })
     return result
   }
+
+  function handleSearchPayments(value) {
+    setSearchData(() => data?.filter(client => {
+      const clientName = client?.f_name;
+      if (clientName && clientName.toLowerCase().includes(value.toLowerCase())) {
+        return true;
+      }
+      return false;
+    }));
+    // console.log(searchData);
+  }
+
   return (
     <div className={styles.clientsContainer}>
       <Modal modalTitle={"Client"} btnTitle={"Add Client"} onClick={addUpdateClient} disable={isButtonDisabled} createUpdateFlag={createUpdateFlag}>
@@ -121,17 +134,28 @@ const Clients = () => {
         })}
 
       </Modal>
-      <AddNewButton
-        title="Add New Client"
-        onClick={() => {
-          setCreateUpdateFlag(true)
-          setSelectedOption([])
-          setEmail("")
-          setFirstName("")
-          setLastName("")
-          document.getElementById("modalId").click()
-        }}
-      />
+      <div className={styles.searchWrap}>
+        <div className={styles.searchContainer}>
+          <TextInput
+            label="Search"
+            star=""
+            placeholder="Search"
+            type="text"
+            setValue={handleSearchPayments}
+          />
+        </div>
+        <AddNewButton
+          title="Add New Client"
+          onClick={() => {
+            setCreateUpdateFlag(true)
+            setSelectedOption([])
+            setEmail("")
+            setFirstName("")
+            setLastName("")
+            document.getElementById("modalId").click()
+          }}
+        />
+      </div>
       <Table
         headings={["Name", "Email", "Date updated", "Assigned To", "Actions"]}
         column={[
@@ -142,7 +166,7 @@ const Clients = () => {
           },
           (element) => { return getAssinees(element.assignee) }
         ]}
-        data={data}
+        data={searchData}
         title="Edit"
         componentTitle="Clients"
         setIsEditted={setIsEditted}
