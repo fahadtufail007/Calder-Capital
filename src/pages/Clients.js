@@ -139,7 +139,7 @@ const Clients = () => {
           <TextInput
             label="Search"
             star=""
-            placeholder="Search"
+            placeholder="Search Client"
             type="text"
             setValue={handleSearchPayments}
           />

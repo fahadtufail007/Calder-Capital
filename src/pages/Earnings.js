@@ -56,6 +56,19 @@ const Earnings = () => {
     return date ? moment(date).format('DD MMM, YYYY') : ''
   }
 
+
+  const currentDate = new Date();
+
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const year = currentDate.getFullYear();
+
+  const formattedDate = `${month}-${day}-${year}`;
+  const fileName = data?.name + "  " + formattedDate;
+
+
+
+
   return (
     <div className={styles.earningsContainer}>
       <div className={styles.revenuesHeader}>
@@ -108,7 +121,7 @@ const Earnings = () => {
         ]}
       />
       <div className={styles.earningsButtonWrapper}>
-        <CSVLink data={csvData} headers={headers} onClick={handleCsvDownload}>
+        <CSVLink data={csvData} headers={headers} onClick={handleCsvDownload} filename={fileName}>
           <Button title="Download in CSV" radius="16px" size="13px" />
         </CSVLink>
       </div>

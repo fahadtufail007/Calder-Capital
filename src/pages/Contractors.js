@@ -9,6 +9,7 @@ import moment from 'moment';
 const Contractors = () => {
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.contractor)
+  // console.log(data[0]?.f_name, " aaaaaaaaaaaaaaaaaaaaaa");
   const [firstName, setFirstName] = useState("")
   const [id, setId] = useState("")
   const [lastName, setLastName] = useState("")
@@ -17,7 +18,7 @@ const Contractors = () => {
   const [confirmPassword, setconfirmPassword] = useState("")
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
+  const [searchData, setSearchData] = useState(data);
 
   const [isEditted, setIsEditted] = useState({})
 
@@ -72,7 +73,16 @@ const Contractors = () => {
       dispatch(addContractor(data))
     }
   }
-
+  function handleSearchContartors(value) {
+    setSearchData(() => data?.filter(client => {
+      const searchContractor = client?.f_name;
+      if (searchContractor && searchContractor.toLowerCase().includes(value.toLowerCase())) {
+        return true;
+      }
+      return false;
+    }));
+    // console.log(data);
+  }
   return (
     <div className={styles.contractorsContainer}>
       <Modal passwordValidate={isPasswordMatched} modalTitle="Contractor" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
@@ -117,18 +127,30 @@ const Contractors = () => {
           setValue={setconfirmPassword}
         />
       </Modal>
-      <AddNewButton
-        title="Add New Contractor"
-        onClick={() => {
-          setCreateUpdateFlag(true)
-          setEmail("")
-          setFirstName("")
-          setLastName("")
-          setPassword("")
-          setconfirmPassword("")
-          document.getElementById("modalId").click()
-        }}
-      />
+      <div className={styles.searchWrap}>
+        <div className={styles.searchContainer}>
+          <TextInput
+            label="Search"
+            star=""
+            placeholder="Search Contractor"
+            type="text"
+            setValue={handleSearchContartors}
+          />
+        </div>
+        <AddNewButton
+          title="Add New Contractor"
+          onClick={() => {
+            setCreateUpdateFlag(true)
+            setEmail("")
+            setFirstName("")
+            setLastName("")
+            setPassword("")
+            setconfirmPassword("")
+            document.getElementById("modalId").click()
+          }}
+        />
+      </div>
+
       <Table
         headings={["Name", "Email", "Date Updated", "Actions"]}
         column={[
@@ -137,7 +159,7 @@ const Contractors = () => {
           (element) => {
             return element?.updatedAt ? moment(element?.updatedAt).format('MMM DD, YYYY') : ''
           }]}
-        data={data}
+        data={searchData}
         title="Edit"
         setIsEditted={setIsEditted}
         componentTitle="Contractors"
