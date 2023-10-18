@@ -278,9 +278,24 @@ const Payments = () => {
         }}
       />
       <div className={styles.paymentButtonWrapper}>
+
         {/* <CSVLink data={csvData} headers={headers}> */}
         <Button title="Download in CSV" radius="16px" size="13px" />
         {/* </CSVLink> */}
+        <TextInput
+          label="Start Date"
+          placeholder="Start Date"
+          type="date"
+        // value={dateStart}
+        // setValue={setDateStart}
+        />
+        <TextInput
+          label="End Date"
+          placeholder="End Date"
+          type="date"
+        // value={dateEnd}
+        // setValue={setDateEnd}
+        />
       </div>
     </div>
   );

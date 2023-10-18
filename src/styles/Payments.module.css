@@ -1,7 +1,11 @@
 .paymentButtonWrapper {
   margin-top: 40px;
-  width: 170px;
+  width: 500px;
+  display: flex;
+  column-gap: 12px;
 }
+
+
 .reactSelectSingle {
   padding-bottom: 20px;
 }
