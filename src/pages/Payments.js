@@ -14,7 +14,7 @@ import {
   Assignees,
 } from "../components";
 import styles from "../styles/Payments.module.css";
-import { addPayment, getPayments, updatePayment } from "../store/thunk/payment.thunk";
+import { addPayment, getPayments, updatePayment, getCsvDataPayment } from "../store/thunk/payment.thunk";
 import { formatDate } from "../util/helper";
 import { getContractors } from "../store/thunk/contractor.thunk";
 import { getClients } from "../store/thunk/client.thunk";
@@ -25,9 +25,60 @@ const Payments = () => {
   const payments = useSelector(state => state.payment.payments)
   const clients = useSelector(state => state.client.data)
   const employees = useSelector(state => state.contractor.data)
+  const { csvData } = useSelector(state => state.payment);
   clients?.forEach(element => {
     options.push({ value: element._id, label: `${element.f_name} ${element.l_name}` })
   });
+
+  console.log("csvData", csvData)
+
+
+
+  const headers = [
+    { label: 'Client Name', key: 'name' },
+    { label: 'Date Range', key: 'dateRange' },
+    { label: 'Payment', key: 'payment' },
+    { label: 'Employee Detail', key: 'employeeDetail' }
+  ];
+
+
+
+  // const jsonData = [
+  //   { name: "ali", dateRange: "02 Oct, 2023 -- 16 Oct, 2023", payment: 400, employeDetail: ["murshad (50% , 2000 USD)", "abc (50% , 2000 USD)"] },
+  //   { name: "ahmed", dateRange: "02 Oct, 2023 -- 16 Oct, 2023", payment: 400, employeDetail: ["aqib (50% , 2000 USD)", "asif (50% , 2000 USD)"] }
+  // ];
+
+
+
+  //final
+  // const transformDataForCSV = (jsonData) => {
+  //   const transformedData = jsonData.map(item => ({
+  //     name: item.name,
+  //     employeeDetail: item.employeeDetail || item.employeDetail || ''  // Handle both cases
+  //   }));
+  //   return transformedData;
+  // };
+
+  // const transformDataForCSV = (jsonData) => {
+  //   const transformedData = [];
+
+  //   jsonData.forEach(item => {
+  //     const employeeDetails = item.employeDetail.map((emp, index) => ({
+  //       name: index === 0 ? item.name : '',  // Display name only in the first row of employee detail
+  //       dateRange: index === 0 ? item.dateRange : '',
+  //       payment: index === 0 ? item.payment : '',
+  //       employeeDetail: emp
+  //     }));
+  //     transformedData.push(...employeeDetails);
+  //   });
+
+  //   return transformedData;
+  // };
+
+
+
+  // const transformedData = transformDataForCSV(jsonData);
+  // console.log("transform", transformedData)
 
   const [id, setId] = useState("")
   const [isEditted, setIsEditted] = useState({});
@@ -52,6 +103,7 @@ const Payments = () => {
 
   useEffect(() => {
     dispatch(getPayments());
+    dispatch(getCsvDataPayment())
     dispatch(getClients());
     dispatch(getContractors());
   }, [])
@@ -278,9 +330,9 @@ const Payments = () => {
         }}
       />
       <div className={styles.paymentButtonWrapper}>
-        {/* <CSVLink data={csvData} headers={headers}> */}
-        <Button title="Download in CSV" radius="16px" size="13px" />
-        {/* </CSVLink> */}
+        <CSVLink data={csvData} headers={headers}>
+          <Button title="Download in CSV" radius="16px" size="13px" />
+        </CSVLink>
       </div>
     </div>
   );
