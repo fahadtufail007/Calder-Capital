@@ -30,7 +30,7 @@ const Payments = () => {
     options.push({ value: element._id, label: `${element.f_name} ${element.l_name}` })
   });
 
-  console.log("csvData", csvData)
+  // console.log("csvData", csvData)
 
 
 
@@ -85,10 +85,14 @@ const Payments = () => {
   const [selectedOption, setSelectedOption] = useState([]);
   const [clientId, setClientId] = useState("")
   const [dateStart, setDateStart] = useState()
+  const [showStartDate, setShowStartDate] = useState("")
+  const [showEndDate, setShowEndDate] = useState("")
   const [dateEnd, setDateEnd] = useState()
   const [payment, setPayment] = useState()
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [paymentEmpty, setPaymentEmpty] = useState(false);
+
   // const headers = [
   //   "Clients",
   //   "Clients Email",
@@ -101,9 +105,19 @@ const Payments = () => {
   //   toast("Cvs downloaded successfully", { type: "success" })
   // }
 
+
+
   useEffect(() => {
-    dispatch(getPayments());
-    dispatch(getCsvDataPayment())
+    const date = {
+      startDate: showStartDate,
+      endDate: showEndDate
+    }
+    dispatch(getPayments(date));
+    dispatch(getCsvDataPayment(date))
+
+  }, [showEndDate, showStartDate])
+
+  useEffect(() => {
     dispatch(getClients());
     dispatch(getContractors());
   }, [])
@@ -250,6 +264,21 @@ const Payments = () => {
     }),
   };
 
+  function noPaymentMsg() {
+    toast("No payment found", { type: "error" })
+  }
+  function paymentSucessMsg() {
+    toast("Cvs downloaded successfully", { type: "success" })
+  }
+  let content;
+  if (Array.isArray(csvData) && csvData.length > 0) {
+    const csvFilename = "payment " + (showStartDate ? "from " + showStartDate : "") + " to " + showEndDate;
+    content = <CSVLink data={csvData} headers={headers} filename={csvFilename}>
+      <Button title="Download in CSV" radius="16px" size="13px" onClick={paymentSucessMsg} />
+    </CSVLink>
+  } else {
+    content = <Button title="Download in CSV" radius="16px" size="13px" onClick={noPaymentMsg} />
+  }
 
   return (
     <div className={styles.paymentsContainer}>
@@ -296,14 +325,32 @@ const Payments = () => {
         })}
 
       </Modal>
-      <AddNewButton
-        title="Add New Payment"
-        onClick={() => {
-          resetStates();
-          setCreateUpdateFlag(true)
-          document.getElementById("modalId").click()
-        }}
-      />
+      <div className={styles.paymentHeader}>
+        <div className={styles.dateRanger}>
+          <TextInput
+            label=" Start Date"
+            placeholder="Start Date"
+            type="date"
+            value={showStartDate}
+            setValue={setShowStartDate}
+          />
+          <TextInput
+            label="End Date"
+            placeholder="End Date"
+            type="date"
+            value={showEndDate}
+            setValue={setShowEndDate}
+          />
+        </div>
+        <AddNewButton
+          title="Add New Payment"
+          onClick={() => {
+            resetStates();
+            setCreateUpdateFlag(true)
+            document.getElementById("modalId").click()
+          }}
+        />
+      </div>
       <Table
         headings={[
           "Client Name",
@@ -330,9 +377,7 @@ const Payments = () => {
         }}
       />
       <div className={styles.paymentButtonWrapper}>
-        <CSVLink data={csvData} headers={headers}>
-          <Button title="Download in CSV" radius="16px" size="13px" />
-        </CSVLink>
+        {content}
       </div>
     </div>
   );

@@ -3,10 +3,10 @@ import { getClients } from "./client.thunk";
 import axios from "axios";
 import { toast } from 'react-toastify';
 
-export const getPayments = createAsyncThunk("payments/getPayments", async (data, { dispatch }) => {
+export const getPayments = createAsyncThunk("payments/getPayments", async (date, { dispatch }) => {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment`, {
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment?startDate=${date.startDate}&endDate=${date.endDate}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -20,18 +20,18 @@ export const getPayments = createAsyncThunk("payments/getPayments", async (data,
   }
 });
 
-export const getCsvDataPayment = createAsyncThunk("payments/myCsvData", async (data, { dispatch }) => {
-  console.log("into get CSCDATA")
+export const getCsvDataPayment = createAsyncThunk("payments/myCsvData", async (date, { dispatch }) => {
+  // console.log("into get CSCDATA")
   const token = localStorage.getItem("token");
-  console.log("token", token)
+  // console.log("token", token)
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment/csv/`, {
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment/csv?startDate=${date.startDate}&endDate=${date.endDate}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    console.log("dddddddddd?????", res)
+    // console.log("dddddddddd?????", res)
     const transformedData = [];
     res?.data.forEach(item => {
       const employeeDetails = item.employeDetail.map((emp, index) => ({
@@ -45,7 +45,7 @@ export const getCsvDataPayment = createAsyncThunk("payments/myCsvData", async (d
 
     return transformedData;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     toast(`Failed to download csv: ${error.message}`, { type: "error" })
   }
 });
