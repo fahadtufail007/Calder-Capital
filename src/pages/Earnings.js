@@ -27,9 +27,7 @@ const Earnings = () => {
     "Commission Earned",
     "Employee Share",
   ]
-  function handleCsvDownload() {
-    toast("Cvs downloaded successfully", { type: "success" })
-  }
+
   useEffect(() => {
     dispatch(getClients());
     dispatch(getEarnings(userId));
@@ -67,6 +65,24 @@ const Earnings = () => {
   const fileName = data?.name + "  " + formattedDate;
 
 
+  function noPaymentMsg() {
+    toast("No payment found", { type: "error" })
+  }
+
+  function paymentSucessMsg() {
+    toast("Cvs downloaded successfully", { type: "success" })
+  }
+
+
+  let CSVBtn;
+  if (Array.isArray(csvData) && csvData.length > 0) {
+
+    CSVBtn = <CSVLink data={csvData} headers={headers} onClick={paymentSucessMsg} filename={fileName}>
+      <Button title="Download in CSV" radius="16px" size="13px" />
+    </CSVLink>
+  } else {
+    CSVBtn = <Button title="Download in CSV" radius="16px" size="13px" onClick={noPaymentMsg} />
+  }
 
 
   return (
@@ -121,9 +137,7 @@ const Earnings = () => {
         ]}
       />
       <div className={styles.earningsButtonWrapper}>
-        <CSVLink data={csvData} headers={headers} onClick={handleCsvDownload} filename={fileName}>
-          <Button title="Download in CSV" radius="16px" size="13px" />
-        </CSVLink>
+        {CSVBtn}
       </div>
     </div>
   );

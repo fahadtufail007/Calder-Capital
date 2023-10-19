@@ -114,7 +114,6 @@ const Payments = () => {
     }
     dispatch(getPayments(date));
     dispatch(getCsvDataPayment(date))
-
   }, [showEndDate, showStartDate])
 
   useEffect(() => {
@@ -270,14 +269,14 @@ const Payments = () => {
   function paymentSucessMsg() {
     toast("Cvs downloaded successfully", { type: "success" })
   }
-  let content;
+  let CSVBtn;
   if (Array.isArray(csvData) && csvData.length > 0) {
     const csvFilename = "payment " + (showStartDate ? "from " + showStartDate : "") + " to " + showEndDate;
-    content = <CSVLink data={csvData} headers={headers} filename={csvFilename}>
+    CSVBtn = <CSVLink data={csvData} headers={headers} filename={csvFilename}>
       <Button title="Download in CSV" radius="16px" size="13px" onClick={paymentSucessMsg} />
     </CSVLink>
   } else {
-    content = <Button title="Download in CSV" radius="16px" size="13px" onClick={noPaymentMsg} />
+    CSVBtn = <Button title="Download in CSV" radius="16px" size="13px" onClick={noPaymentMsg} />
   }
 
   return (
@@ -377,7 +376,7 @@ const Payments = () => {
         }}
       />
       <div className={styles.paymentButtonWrapper}>
-        {content}
+        {CSVBtn}
       </div>
     </div>
   );
