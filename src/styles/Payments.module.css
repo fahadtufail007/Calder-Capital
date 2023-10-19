@@ -5,7 +5,16 @@
   column-gap: 12px;
 }
 
-
 .reactSelectSingle {
   padding-bottom: 20px;
+}
+
+.paymentHeader {
+  display: flex;
+}
+
+.dateRanger {
+  column-gap: 10px;
+  padding-top: 35px;
+  display: flex;
 }

@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 // import { loginAction } from '../thunk/login.thunk';
-import { getPayments } from '../thunk/payment.thunk';
+import { getPayments, getCsvDataPayment } from '../thunk/payment.thunk';
 
 const initialState = {
   payments: [],
+  csvData: [],
   laoding: false,
 };
 
@@ -27,6 +28,16 @@ export const pyamentReducer = createSlice({
       state.laoding = true;
     },
     [getPayments.rejected]: (state) => {
+      state.laoding = false;
+    },
+    [getCsvDataPayment.fulfilled]: (state, { payload }) => {
+      state.csvData = payload;
+      state.laoding = false;
+    },
+    [getCsvDataPayment.pending]: (state) => {
+      state.laoding = true;
+    },
+    [getCsvDataPayment.rejected]: (state) => {
       state.laoding = false;
     }
   },
