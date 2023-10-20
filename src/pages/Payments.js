@@ -29,56 +29,12 @@ const Payments = () => {
   clients?.forEach(element => {
     options.push({ value: element._id, label: `${element.f_name} ${element.l_name}` })
   });
-
-  // console.log("csvData", csvData)
-
-
-
   const headers = [
     { label: 'Client Name', key: 'name' },
     { label: 'Date Range', key: 'dateRange' },
     { label: 'Payment', key: 'payment' },
     { label: 'Employee Detail', key: 'employeeDetail' }
   ];
-
-
-
-  // const jsonData = [
-  //   { name: "ali", dateRange: "02 Oct, 2023 -- 16 Oct, 2023", payment: 400, employeDetail: ["murshad (50% , 2000 USD)", "abc (50% , 2000 USD)"] },
-  //   { name: "ahmed", dateRange: "02 Oct, 2023 -- 16 Oct, 2023", payment: 400, employeDetail: ["aqib (50% , 2000 USD)", "asif (50% , 2000 USD)"] }
-  // ];
-
-
-
-  //final
-  // const transformDataForCSV = (jsonData) => {
-  //   const transformedData = jsonData.map(item => ({
-  //     name: item.name,
-  //     employeeDetail: item.employeeDetail || item.employeDetail || ''  // Handle both cases
-  //   }));
-  //   return transformedData;
-  // };
-
-  // const transformDataForCSV = (jsonData) => {
-  //   const transformedData = [];
-
-  //   jsonData.forEach(item => {
-  //     const employeeDetails = item.employeDetail.map((emp, index) => ({
-  //       name: index === 0 ? item.name : '',  // Display name only in the first row of employee detail
-  //       dateRange: index === 0 ? item.dateRange : '',
-  //       payment: index === 0 ? item.payment : '',
-  //       employeeDetail: emp
-  //     }));
-  //     transformedData.push(...employeeDetails);
-  //   });
-
-  //   return transformedData;
-  // };
-
-
-
-  // const transformedData = transformDataForCSV(jsonData);
-  // console.log("transform", transformedData)
 
   const [id, setId] = useState("")
   const [isEditted, setIsEditted] = useState({});
@@ -91,21 +47,8 @@ const Payments = () => {
   const [payment, setPayment] = useState()
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [paymentEmpty, setPaymentEmpty] = useState(false);
-
-  // const headers = [
-  //   "Clients",
-  //   "Clients Email",
-  //   "Last Date Updated",
-  //   "Commission Earned",
-  //   "Employee Share",
-  // ]
-
-  // function handleCsvDownload() {
-  //   toast("Cvs downloaded successfully", { type: "success" })
-  // }
-
-
+  const [formEdit, setFormEdit] = useState(false)
+  const [showClient, setShowClient] = useState('');
 
   useEffect(() => {
     const date = {
@@ -129,8 +72,11 @@ const Payments = () => {
   useEffect(() => {
     validateForm();
     if (Object.keys(isEditted).length) {
+
       setCreateUpdateFlag(false)
+      setFormEdit(true);
       const { dateStart, dateEnd, assignee } = isEditted;
+      setShowClient(getClientName(clientId));
       setDateStart(formatDate(dateStart))
       setDateEnd(formatDate(dateEnd))
       setClientId(isEditted['clientId'])
@@ -175,7 +121,6 @@ const Payments = () => {
   }
 
   const handleAddPayment = () => {
-
     const assignee = [];
     selectedOption.forEach((x) => {
       assignee.push({ employee_id: x.key, employee_percentage: x.commission })
@@ -251,6 +196,7 @@ const Payments = () => {
     setClientId('')
     setPayment('')
     setDateEnd('')
+    setShowClient('')
     setDateStart('')
     setSelectedOption([]);
   }
@@ -271,7 +217,7 @@ const Payments = () => {
   }
   let CSVBtn;
   if (Array.isArray(csvData) && csvData.length > 0) {
-    const csvFilename = "payment " + (showStartDate ? "from " + showStartDate : "") + " to " + showEndDate;
+    const csvFilename = "payment " + (showStartDate ? "from " + showStartDate : "") + (showEndDate ? " to " + showEndDate : "");
     CSVBtn = <CSVLink data={csvData} headers={headers} filename={csvFilename}>
       <Button title="Download in CSV" radius="16px" size="13px" onClick={paymentSucessMsg} />
     </CSVLink>
@@ -286,16 +232,16 @@ const Payments = () => {
           className={styles.reactSelectSingle}
           styles={customStyles}
           label="Client Name"
-          placeholder="Client Name"
+          placeholder={formEdit ? showClient : "Client Name"}
           onChange={(e) => {
             setClientId(e.value)
           }}
           isSearchable={true}
           required
           name="Client Name"
-          options={options}
+          options={formEdit ? [] : options}
+          value={formEdit ? showClient : undefined}
         />
-
         <TextInput
           label="Payment"
           star="*"
@@ -344,6 +290,7 @@ const Payments = () => {
         <AddNewButton
           title="Add New Payment"
           onClick={() => {
+            setFormEdit(false);
             resetStates();
             setCreateUpdateFlag(true)
             document.getElementById("modalId").click()

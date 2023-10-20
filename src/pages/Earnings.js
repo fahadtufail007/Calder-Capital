@@ -110,7 +110,7 @@ const Earnings = () => {
       <Table
         headings={[
           "Clients",
-          "Client Email",
+          // "Client Email",
           "Last Date Updated",
           "Commission Earned",
           "Contractor Share",
@@ -122,9 +122,9 @@ const Earnings = () => {
           (element) => {
             return getClientData(element.clientId).name
           },
-          (element) => {
-            return getClientData(element.clientId).email
-          },
+          // (element) => {
+          //   return getClientData(element.clientId).email
+          // },
           (element) => {
             return getFormatedDate(element.updatedAt)
           },

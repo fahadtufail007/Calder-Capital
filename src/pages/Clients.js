@@ -157,10 +157,12 @@ const Clients = () => {
         />
       </div>
       <Table
-        headings={["Name", "Email", "Date updated", "Assigned To", "Actions"]}
+        headings={["Name",
+          // "Email", 
+          "Date updated", "Assigned To", "Actions"]}
         column={[
           `f_name`,
-          'email',
+          // 'email',
           (element) => {
             return element?.updatedAt ? moment(element?.updatedAt).format('MMM DD, YYYY') : ''
           },
