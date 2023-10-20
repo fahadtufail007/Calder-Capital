@@ -6,7 +6,11 @@ import { toast } from 'react-toastify';
 export const getPayments = createAsyncThunk("payments/getPayments", async (date, { dispatch }) => {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment?startDate=${date.startDate}&endDate=${date.endDate}`, {
+    let query = ''
+    if (date) {
+      query = `?startDate=${date?.startDate}&endDate=${date?.endDate}`;
+    }
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/payment${query}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -76,6 +80,7 @@ export const updatePayment = createAsyncThunk("payments/updatePayment", async ({
         },
       });
     if (res?.data) {
+      console.log('first')
       dispatch(getPayments());
       toast("Payment updated successfully", { type: "success" })
     }
