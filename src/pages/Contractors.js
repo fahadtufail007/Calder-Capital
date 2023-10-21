@@ -27,6 +27,12 @@ const Contractors = () => {
   }, []);
 
   useEffect(() => {
+    if (data) {
+      setSearchData(data)
+    }
+  }, [data])
+
+  useEffect(() => {
     validateForm()
     if (Object.keys(isEditted).length) {
       setCreateUpdateFlag(false)

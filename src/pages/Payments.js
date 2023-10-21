@@ -136,7 +136,7 @@ const Payments = () => {
 
   const validateForm = () => {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Regular expression for yyyy-mm-dd format
-    const paymentRegex = /^\d+(\.\d{1,2})?$/;    // Regular expression for alphabetic characters and spaces only
+    const paymentRegex = /^\d+(\.\d+)?$/;
 
     const isValidStartDate = dateRegex.test(dateStart);
     const isValidEndDate = dateRegex.test(dateEnd);
