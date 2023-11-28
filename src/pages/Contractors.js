@@ -3,45 +3,53 @@ import React, { useEffect, useState } from "react";
 import styles from "../styles/Contractors.module.css";
 import { AddNewButton, Modal, Table, TextInput } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { addContractor, getContractors, updateContractor } from "../store/thunk/contractor.thunk";
-import moment from 'moment';
+import {
+  addContractor,
+  getContractors,
+  updateContractor,
+} from "../store/thunk/contractor.thunk";
+import moment from "moment";
 
 const Contractors = () => {
   const dispatch = useDispatch();
-  const { data } = useSelector(state => state.contractor)
-  // console.log(data[0]?.f_name, " aaaaaaaaaaaaaaaaaaaaaa");
-  const [firstName, setFirstName] = useState("")
-  const [id, setId] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setconfirmPassword] = useState("")
-  const [createUpdateFlag, setCreateUpdateFlag] = useState(true)
+  const { data } = useSelector((state) => state.contractor);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [id, setId] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const [createUpdateFlag, setCreateUpdateFlag] = useState(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [searchData, setSearchData] = useState(data);
 
-  const [isEditted, setIsEditted] = useState({})
+  const [isEditted, setIsEditted] = useState({});
 
   useEffect(() => {
-    dispatch(getContractors());
-  }, []);
+    if (selectedDate) {
+      dispatch(getContractors(selectedDate));
+    } else {
+      dispatch(getContractors(null));
+    }
+  }, [selectedDate]);
 
   useEffect(() => {
     if (data) {
-      setSearchData(data)
+      setSearchData(data);
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
-    validateForm()
+    validateForm();
     if (Object.keys(isEditted).length) {
-      setCreateUpdateFlag(false)
+      setCreateUpdateFlag(false);
       const { f_name, l_name } = isEditted;
-      setFirstName(f_name)
-      setLastName(l_name)
-      setEmail(isEditted['email'])
-      setId(isEditted['_id'])
-      setIsEditted("")
+      setFirstName(f_name);
+      setLastName(l_name);
+      setEmail(isEditted["email"]);
+      setId(isEditted["_id"]);
+      setIsEditted("");
     }
   }, [firstName, lastName, email, isEditted, password, confirmPassword]);
 
@@ -61,37 +69,46 @@ const Contractors = () => {
   };
 
   const addUpdateEmployee = () => {
-
     const data = {
       f_name: firstName,
       l_name: lastName,
       email,
       password,
       is_verified: true,
-      is_admin: false
-    }
-    if (password == '') {
+      is_admin: false,
+    };
+    if (password == "") {
       delete data.password;
     }
     if (!createUpdateFlag) {
-      dispatch(updateContractor({ data, id }))
+      dispatch(updateContractor({ data, id }));
     } else {
-      dispatch(addContractor(data))
+      dispatch(addContractor(data));
     }
-  }
+  };
   function handleSearchContartors(value) {
-    setSearchData(() => data?.filter(client => {
-      const searchContractor = client?.f_name;
-      if (searchContractor && searchContractor.toLowerCase().includes(value.toLowerCase())) {
-        return true;
-      }
-      return false;
-    }));
+    setSearchData(() =>
+      data?.filter((client) => {
+        const searchContractor = client?.f_name;
+        if (
+          searchContractor &&
+          searchContractor.toLowerCase().includes(value.toLowerCase())
+        ) {
+          return true;
+        }
+        return false;
+      })
+    );
     // console.log(data);
   }
   return (
     <div className={styles.contractorsContainer}>
-      <Modal passwordValidate={isPasswordMatched} modalTitle="Contractor" createUpdateFlag={createUpdateFlag} onClick={addUpdateEmployee} disable={isButtonDisabled}>
+      <Modal
+        passwordValidate={isPasswordMatched}
+        modalTitle="Contractor"
+        createUpdateFlag={createUpdateFlag}
+        onClick={addUpdateEmployee}
+        disable={isButtonDisabled}>
         <TextInput
           label="Contractor Name "
           star="*"
@@ -142,35 +159,52 @@ const Contractors = () => {
             type="text"
             setValue={handleSearchContartors}
           />
+          <TextInput
+            label=" Select Date"
+            placeholder="Select Date"
+            type="date"
+            value={selectedDate}
+            setValue={setSelectedDate}
+          />
         </div>
         <AddNewButton
           title="Add New Contractor"
           onClick={() => {
-            setCreateUpdateFlag(true)
-            setEmail("")
-            setFirstName("")
-            setLastName("")
-            setPassword("")
-            setconfirmPassword("")
-            document.getElementById("modalId").click()
+            setCreateUpdateFlag(true);
+            setEmail("");
+            setFirstName("");
+            setLastName("");
+            setPassword("");
+            setconfirmPassword("");
+            document.getElementById("modalId").click();
           }}
         />
       </div>
-
-      <Table
-        headings={["Name", "Email", "Date Updated", "Actions"]}
-        column={[
-          (element) => { return `${element.f_name} ${element.l_name}` },
-          'email',
-          (element) => {
-            return element?.updatedAt ? moment(element?.updatedAt).format('MMM DD, YYYY') : ''
-          }]}
-        data={searchData}
-        title="Edit"
-        setIsEditted={setIsEditted}
-        componentTitle="Contractors"
-        onClick={() => document.getElementById("modalId").click()}
-      />
+      {selectedDate && searchData && searchData.length === 0 ? (
+        <div className={styles.errorMessage}>
+          No data available for the selected date
+        </div>
+      ) : (
+        <Table
+          headings={["Name", "Email", "Date Updated", "Actions"]}
+          column={[
+            (element) => {
+              return `${element.f_name} ${element.l_name}`;
+            },
+            "email",
+            (element) => {
+              return element?.updatedAt
+                ? moment(element?.updatedAt).format("MMM DD, YYYY")
+                : "";
+            },
+          ]}
+          data={searchData}
+          title="Edit"
+          setIsEditted={setIsEditted}
+          componentTitle="Contractors"
+          onClick={() => document.getElementById("modalId").click()}
+        />
+      )}
     </div>
   );
 };

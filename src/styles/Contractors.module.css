@@ -1,17 +1,22 @@
 .viewProfile {
   color: var(--light-grey-color);
 }
-
 .viewProfile:hover {
   color: var(--light-grey-color);
 }
-
-
 .searchContainer {
   padding-top: 35px;
-  width: 250px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
 .searchWrap {
   display: flex;
+}
+.errorMessage{
+  text-align: center;
+  height: 35vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
