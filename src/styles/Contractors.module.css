@@ -13,10 +13,3 @@
 .searchWrap {
   display: flex;
 }
-.errorMessage{
-  text-align: center;
-  height: 35vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}

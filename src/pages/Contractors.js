@@ -23,7 +23,6 @@ const Contractors = () => {
   const [createUpdateFlag, setCreateUpdateFlag] = useState(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [searchData, setSearchData] = useState(data);
-
   const [isEditted, setIsEditted] = useState({});
 
   useEffect(() => {
@@ -101,6 +100,7 @@ const Contractors = () => {
     );
     // console.log(data);
   }
+
   return (
     <div className={styles.contractorsContainer}>
       <Modal
@@ -180,31 +180,26 @@ const Contractors = () => {
           }}
         />
       </div>
-      {selectedDate && searchData && searchData.length === 0 ? (
-        <div className={styles.errorMessage}>
-          No data available for the selected date
-        </div>
-      ) : (
-        <Table
-          headings={["Name", "Email", "Date Updated", "Actions"]}
-          column={[
-            (element) => {
-              return `${element.f_name} ${element.l_name}`;
-            },
-            "email",
-            (element) => {
-              return element?.updatedAt
-                ? moment(element?.updatedAt).format("MMM DD, YYYY")
-                : "";
-            },
-          ]}
-          data={searchData}
-          title="Edit"
-          setIsEditted={setIsEditted}
-          componentTitle="Contractors"
-          onClick={() => document.getElementById("modalId").click()}
-        />
-      )}
+
+      <Table
+        headings={["Name", "Email", "Date Updated", "Actions"]}
+        column={[
+          (element) => {
+            return `${element.f_name} ${element.l_name}`;
+          },
+          "email",
+          (element) => {
+            return element?.updatedAt
+              ? moment(element?.updatedAt).format("MMM DD, YYYY")
+              : "";
+          },
+        ]}
+        data={searchData}
+        title="Edit"
+        setIsEditted={setIsEditted}
+        componentTitle="Contractors"
+        onClick={() => document.getElementById("modalId").click()}
+      />
     </div>
   );
 };
