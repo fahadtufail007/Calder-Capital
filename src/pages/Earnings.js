@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { CSVLink } from "react-csv";
-import moment from "moment";
 
 import styles from "../styles/Earnings.module.css";
 import { Button, RevenueCard, Table, TextInput } from "../components";
@@ -16,12 +15,10 @@ import { toast } from "react-toastify";
 
 const Earnings = () => {
   const { userId } = useParams();
-  // console.log(userId, "userid X");
   const dispatch = useDispatch();
   const { data, csvData } = useSelector((state) => state.earning);
   const [selectedDate, setSelectedDate] = useState();
-  const [selectedData, setSelectedData] = useState([]);
-  const clients = useSelector((state) => state.client.data);
+  const [selectedData, setSelectedData] = useState(csvData || []);
   const headers = [
     "Clients",
     "Clients Email",
@@ -31,30 +28,17 @@ const Earnings = () => {
   ];
 
   useEffect(() => {
+    setSelectedData(csvData);
+  }, [csvData]);
+
+  console.log("csvData", csvData);
+  console.log("selectedData", selectedData);
+
+  useEffect(() => {
     dispatch(getClients());
     dispatch(getEarnings(userId));
     dispatch(getCsvData(userId));
   }, []);
-
-  const getClientData = (id) => {
-    const client = clients?.find((x) => x._id == id);
-    console.log(id, "client data");
-    if (client) {
-      return {
-        name: `${client?.f_name} ${client?.l_name}`,
-        email: client?.email,
-      };
-    } else {
-      return {
-        name: "",
-        email: "",
-      };
-    }
-  };
-
-  const getFormatedDate = (date) => {
-    return date ? moment(date).format("DD MMM, YYYY") : "";
-  };
 
   const currentDate = new Date();
 
@@ -74,10 +58,10 @@ const Earnings = () => {
   }
 
   let CSVBtn;
-  if (Array.isArray(csvData) && csvData.length > 0) {
+  if (Array.isArray(selectedData) && selectedData.length > 0) {
     CSVBtn = (
       <CSVLink
-        data={csvData}
+        data={selectedData}
         headers={headers}
         onClick={paymentSucessMsg}
         filename={fileName}>
@@ -97,22 +81,28 @@ const Earnings = () => {
 
   const filteredData = (date) => {
     if (!date) {
-      setSelectedData(data?.earnings);
+      setSelectedData(csvData);
       return;
     }
     const selectedDate = new Date(date);
     setSelectedData(
-      data?.earnings?.filter((item) => {
-        if (
-          selectedDate >= new Date(item.dateStart) &&
-          selectedDate <= new Date(item.dateEnd)
-        ) {
+      csvData?.filter((item) => {
+        console.log("item[2]", item);
+        if (selectedDate.toDateString() == new Date(item[2]).toDateString()) {
           return true;
         } else {
           return false;
         }
       })
     );
+  };
+
+  const getTotalEarning = () => {
+    let total = 0;
+    selectedData.forEach((item) => {
+      total = total + Number(item[3].slice(2));
+    });
+    return `$ ${total}`;
   };
 
   useEffect(() => {
@@ -137,9 +127,10 @@ const Earnings = () => {
           <RevenueCard
             title="Total Revenue"
             revenue={
-              data?.totalEarning
-                ? parseFloat(data.totalEarning).toFixed(2)
-                : "N/A"
+              getTotalEarning()
+              // data?.totalEarning
+              //   ? parseFloat(data.totalEarning).toFixed(2)
+              //   : "N/A"
             }
             icon={totalRevenueIcon}
           />
@@ -151,7 +142,10 @@ const Earnings = () => {
           /> */}
           <RevenueCard
             title="Total Clients"
-            revenue={`${data?.totalClients}`}
+            revenue={
+              selectedData?.length
+              // `${data?.totalClients}`
+            }
             icon={clientsIcon}
           />
         </div>
@@ -170,19 +164,16 @@ const Earnings = () => {
         data={selectedData}
         column={[
           (element) => {
-            return getClientData(element.clientId).name;
-          },
-          // (element) => {
-          //   return getClientData(element.clientId).email
-          // },
-          (element) => {
-            return getFormatedDate(element.updatedAt);
+            return element[0];
           },
           (element) => {
-            return `$ ${parseFloat(element.employeeAmount).toFixed(2)}`;
+            return element[2];
           },
           (element) => {
-            return `${element.employeeShare} %`;
+            return element[3];
+          },
+          (element) => {
+            return element[4];
           },
         ]}
       />
