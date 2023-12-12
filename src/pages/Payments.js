@@ -29,19 +29,25 @@ const Payments = () => {
   const options = [];
   const payments = useSelector((state) => state.payment.payments);
   const clients = useSelector((state) => state.client.data);
+
   const employees = useSelector((state) => state.contractor.data);
+
   const { csvData } = useSelector((state) => state.payment);
+  console.log("csvData", csvData);
+
   clients?.forEach((element) => {
     options.push({
       value: element._id,
-      label: `${element.f_name} ${element.l_name}`,
+      label: `${element.f_name} ${element.l_name}  ${element.employeeDetail}`,
     });
   });
   const headers = [
     { label: "Client Name", key: "name" },
     { label: "Date Range", key: "dateRange" },
     { label: "Payment", key: "payment" },
-    { label: "Employee Detail", key: "employeeDetail" },
+    { label: "Contractor Name", key: "contractorName" },
+    { label: "Contractor Percentage", key: "percentage" },
+    { label: "Contractor Amount", key: "amount" },
   ];
 
   const [id, setId] = useState("");
@@ -111,6 +117,7 @@ const Payments = () => {
 
   const getEmployees = (clientId) => {
     const client = clients?.find((client) => client._id === clientId);
+    setPayment(client?.payment_set || "");
     if (client) {
       client?.assignee.map((x) => {
         setSelectedOption((prevState) => {
@@ -236,12 +243,20 @@ const Payments = () => {
       <div
         key={assignee.employee_id}
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
           padding: 5,
         }}>
         <span>{getEmpName(assignee.employee_id)}</span>
+      </div>
+    ));
+  };
+
+  const renderEmployeePercentage = (assignees) => {
+    return assignees.map((assignee) => (
+      <div
+        key={assignee.employee_id}
+        style={{
+          padding: 5,
+        }}>
         <span>{assignee.employee_percentage}%</span>
       </div>
     ));
@@ -285,6 +300,21 @@ const Payments = () => {
     }),
   };
 
+  const getCsvDataToDownload = () => {
+    const result = csvData.map((data) => {
+      return {
+        contractorName: data?.employeeDetail?.name,
+        dateRange: data?.dateRange,
+        name: data?.name,
+        amount: data?.employeeDetail?.amount,
+        percentage: data?.employeeDetail?.percentage,
+        payment: data?.payment,
+      };
+    });
+    console.log("result", result);
+    return result;
+  };
+
   function noPaymentMsg() {
     toast("No payment found", { type: "error" });
   }
@@ -298,7 +328,10 @@ const Payments = () => {
       (showStartDate ? "from " + showStartDate : "") +
       (showEndDate ? " to " + showEndDate : "");
     CSVBtn = (
-      <CSVLink data={csvData} headers={headers} filename={csvFilename}>
+      <CSVLink
+        data={getCsvDataToDownload()}
+        headers={headers}
+        filename={csvFilename}>
         <Button
           title="Download in CSV"
           radius="16px"
@@ -406,7 +439,8 @@ const Payments = () => {
           "Client Name",
           "Date Range",
           "Payment",
-          "Employee Detail",
+          "Contractor Name",
+          "Contractor Percentage",
           "Amount",
           "Actions",
         ]}
@@ -418,6 +452,7 @@ const Payments = () => {
             )}`,
           (element) => parseFloat(element.payment).toFixed(2),
           (element) => renderEmployeeList(element?.assignee),
+          (element) => renderEmployeePercentage(element?.assignee),
           (element) =>
             renderEmployeeAmount(element?.assignee, element?.payment),
         ]}

@@ -7,6 +7,7 @@
   justify-content: center;
   cursor: pointer;
   border: 1px solid var(--ofwhite-color);
+  padding: 0px 10px;
 }
 
 .buttonTitle {

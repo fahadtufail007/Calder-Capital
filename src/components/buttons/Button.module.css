@@ -8,6 +8,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border: none;
+  padding: 0px 20px;
 }
 
 button:disabled,
