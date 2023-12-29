@@ -1,93 +1,123 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { CSVLink } from "react-csv";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { CSVLink } from 'react-csv';
 
-import styles from "../styles/Earnings.module.css";
-import { Button, RevenueCard, Table, TextInput } from "../components";
+import styles from '../styles/Earnings.module.css';
+import { Button, RevenueCard, Table, TextInput } from '../components';
 
-import totalRevenueIcon from "../assets/svgs/total-revenue-icon.svg";
+import totalRevenueIcon from '../assets/svgs/total-revenue-icon.svg';
 // import monthlyRevenueIcon from "../assets/svgs/monthly-revenue-icon.svg";
-import clientsIcon from "../assets/svgs/avatar-icon.svg";
-import { getClients } from "../store/thunk/client.thunk";
-import { getCsvData, getEarnings } from "../store/thunk/earning.thunk";
-import { toast } from "react-toastify";
+import clientsIcon from '../assets/svgs/avatar-icon.svg';
+import { getClients } from '../store/thunk/client.thunk';
+import { getCsvData, getEarnings } from '../store/thunk/earning.thunk';
+import { toast } from 'react-toastify';
 
 const Earnings = () => {
   const { userId } = useParams();
   const dispatch = useDispatch();
   const { data, csvData } = useSelector((state) => state.earning);
   const [selectedDate, setSelectedDate] = useState();
-  const [selectedData, setSelectedData] = useState(csvData || []);
+  const [selectedData, setSelectedData] = useState(data?.data || []);
   const headers = [
-    "Clients",
-    "Clients Email",
-    "Last Date Updated",
-    "Commission Earned",
-    "Employee Share",
+    'Clients',
+    'Clients Email',
+    'Last Date Updated',
+    'Commission Earned',
+    'Employee Share',
   ];
 
-  useEffect(() => {
-    setSelectedData(csvData);
-  }, [csvData]);
+  // useEffect(() => {
+  //   setSelectedData(csvData);
+  // }, [csvData]);
 
-  console.log("csvData", csvData);
-  console.log("selectedData", selectedData);
+  // console.log('data', data);
+  // console.log('selectedData', selectedData);
 
   useEffect(() => {
-    dispatch(getClients());
-    dispatch(getEarnings(userId));
-    dispatch(getCsvData(userId));
+    // dispatch(getClients());
+    const params = ''
+    dispatch(getEarnings({ userId, params }));
+    // dispatch(getCsvData(userId));
   }, []);
 
   const currentDate = new Date();
 
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-  const day = String(currentDate.getDate()).padStart(2, "0");
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(currentDate.getDate()).padStart(2, '0');
   const year = currentDate.getFullYear();
 
   const formattedDate = `${month}-${day}-${year}`;
-  const fileName = data?.name + "  " + formattedDate;
+  const fileName = data?.name + '  ' + formattedDate;
 
   function noPaymentMsg() {
-    toast("No payment found", { type: "error" });
+    toast('No payment found', { type: 'error' });
   }
 
   function paymentSucessMsg() {
-    toast("Cvs downloaded successfully", { type: "success" });
+    toast('Cvs downloaded successfully', { type: 'success' });
   }
 
   let CSVBtn;
-  if (Array.isArray(selectedData) && selectedData.length > 0) {
+  if (Array.isArray(data?.data) && data?.data.length > 0) {
     CSVBtn = (
       <CSVLink
-        data={selectedData}
+        data={data?.data}
         headers={headers}
         onClick={paymentSucessMsg}
-        filename={fileName}>
-        <Button title="Download in CSV" radius="16px" size="13px" />
+        filename={fileName}
+      >
+        <Button title='Download in CSV' radius='16px' size='13px' />
       </CSVLink>
     );
   } else {
     CSVBtn = (
       <Button
-        title="Download in CSV"
-        radius="16px"
-        size="13px"
+        title='Download in CSV'
+        radius='16px'
+        size='13px'
         onClick={noPaymentMsg}
       />
     );
   }
 
+  function getDaysInMonth(year, month) {
+    // JavaScript months are 0-indexed, so January is 0 and December is 11
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    return lastDayOfMonth.getDate();
+  }
+  function getDateRange(dateString) {
+    const currentDate = new Date(dateString);
+    const startDate = new Date(currentDate);
+    const endDate = new Date(startDate);
+
+    if (currentDate.getDate() >= 16) {
+      startDate.setDate(16);
+      const daysInMonth = getDaysInMonth(
+        startDate.getFullYear(),
+        startDate.getMonth()
+      );
+      endDate.setDate(daysInMonth);
+    } else {
+      startDate.setDate(1);
+      endDate.setDate(15);
+    }
+
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+
+    return [formattedStartDate, formattedEndDate];
+  }
+
   const filteredData = (date) => {
     if (!date) {
-      setSelectedData(csvData);
+      setSelectedData(data?.data);
       return;
     }
     const selectedDate = new Date(date);
     setSelectedData(
-      csvData?.filter((item) => {
-        console.log("item[2]", item);
+      data?.data?.filter((item) => {
+        console.log('item[2]', item);
         if (selectedDate.toDateString() == new Date(item[2]).toDateString()) {
           return true;
         } else {
@@ -99,15 +129,21 @@ const Earnings = () => {
 
   const getTotalEarning = () => {
     let total = 0;
-    selectedData.forEach((item) => {
+    data?.data.forEach((item) => {
       total = total + Number(item[3].slice(2));
     });
     return `$ ${total}`;
   };
 
   useEffect(() => {
-    filteredData(selectedDate);
-  }, [selectedDate, data]);
+    if (selectedDate) {
+      console.log('-------selected date: ', getDateRange(selectedDate));
+      const datesArray = getDateRange(selectedDate);
+      const params = `startDate=${datesArray[0]}&endDate=${datesArray[1]}`;
+      // filteredData(selectedDate);
+      dispatch(getEarnings({ userId, params }));
+    }
+  }, [selectedDate]);
 
   return (
     <div className={styles.earningsContainer}>
@@ -117,17 +153,18 @@ const Earnings = () => {
           <div className={styles.userEmail}>{data?.email}</div>
         </div>
         <TextInput
-          label=" Select Date"
-          placeholder="Select Date"
-          type="date"
+          label=' Select Date'
+          placeholder='Select Date'
+          type='date'
           value={selectedDate}
           setValue={setSelectedDate}
         />
         <div className={styles.revenueCards}>
           <RevenueCard
-            title="Total Revenue"
+            title='Total Revenue'
             revenue={
-              getTotalEarning()
+              data.totalEarnings
+              // getTotalEarning()
               // data?.totalEarning
               //   ? parseFloat(data.totalEarning).toFixed(2)
               //   : "N/A"
@@ -141,9 +178,9 @@ const Earnings = () => {
             icon={monthlyRevenueIcon}
           /> */}
           <RevenueCard
-            title="Total Clients"
+            title='Total Clients'
             revenue={
-              selectedData?.length
+              data?.data?.length
               // `${data?.totalClients}`
             }
             icon={clientsIcon}
@@ -153,15 +190,15 @@ const Earnings = () => {
 
       <Table
         headings={[
-          "Clients",
+          'Clients',
           // "Client Email",
-          "Last Date Updated",
-          "Commission Earned",
-          "Contractor Share",
-          "Actions",
+          'Last Date Updated',
+          'Commission Earned',
+          'Contractor Share',
+          'Actions',
         ]}
-        componentTitle="Earnings"
-        data={selectedData}
+        componentTitle='Earnings'
+        data={data?.data}
         column={[
           (element) => {
             return element[0];

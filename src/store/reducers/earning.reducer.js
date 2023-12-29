@@ -3,9 +3,9 @@ import { getEarnings, getCsvData } from '../thunk/earning.thunk';
 
 const initialState = {
   data: {
-    earnings: [],
-    totalEarning: 0,
-    totalClients: 0,
+    data: [],
+    totalEarnings: 0,
+    uniqueClients: 0,
     name: "",
     email: ""
   },
