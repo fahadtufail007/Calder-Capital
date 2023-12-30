@@ -1,15 +1,15 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getClients } from "./client.thunk";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getClients } from './client.thunk';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const getEarnings = createAsyncThunk(
-  "earning/myEarnings",
-  async (userId, { dispatch }) => {
-    const token = localStorage.getItem("token");
+  'earning/myEarnings',
+  async ({userId, params}, { dispatch }) => {
+    const token = localStorage.getItem('token');
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/earning/myEarnings/${userId}`,
+        `${process.env.REACT_APP_BASE_URL}/earning/myCsvData/${userId}?${params}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -17,9 +17,9 @@ export const getEarnings = createAsyncThunk(
         }
       );
 
-      if (res?.data) {
-        dispatch(getClients());
-      }
+      // if (res?.data) {
+      //   dispatch(getClients());
+      // }
       return res?.data;
     } catch (error) {
       console.error(error);
@@ -28,9 +28,9 @@ export const getEarnings = createAsyncThunk(
 );
 
 export const getCsvData = createAsyncThunk(
-  "earning/myCsvData",
+  'earning/myCsvData',
   async (userId, { dispatch }) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BASE_URL}/earning/myCsvData/${userId}`,
@@ -43,15 +43,15 @@ export const getCsvData = createAsyncThunk(
       return res?.data;
     } catch (error) {
       console.error(error);
-      toast(`Failed to download csv: ${error.message}`, { type: "error" });
+      toast(`Failed to download csv: ${error.message}`, { type: 'error' });
     }
   }
 );
 
 export const deleteEarning = createAsyncThunk(
-  "earning/delete",
+  'earning/delete',
   async ({ id }, { dispatch }) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
       await axios.delete(`${process.env.REACT_APP_BASE_URL}/earning/${id}`, {
         headers: {
@@ -59,10 +59,10 @@ export const deleteEarning = createAsyncThunk(
         },
       });
       dispatch(getEarnings());
-      toast("Earning deleted successfully", { type: "success" });
+      toast('Earning deleted successfully', { type: 'success' });
     } catch (error) {
       console.error(error);
-      toast(`Failed to delete earning: ${error.message}`, { type: "error" });
+      toast(`Failed to delete earning: ${error.message}`, { type: 'error' });
     }
   }
 );

@@ -43,7 +43,7 @@ const Table = ({
                         setIsEditted(element);
                         document?.getElementById("modalId")?.click();
                       }}
-                      id={element._id}
+                      id={element[4]?? element._id}
                     />
                   </td>
                 </tr>
