@@ -141,8 +141,8 @@ const Earnings = () => {
           <RevenueCard
             title='Total Clients'
             revenue={
-              data?.data?.length
-              // `${data?.totalClients}`
+              // data?.data?.length
+              data?.uniqueClients
             }
             icon={clientsIcon}
           />
