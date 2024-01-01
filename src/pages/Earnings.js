@@ -9,36 +9,25 @@ import { Button, RevenueCard, Table, TextInput } from '../components';
 import totalRevenueIcon from '../assets/svgs/total-revenue-icon.svg';
 // import monthlyRevenueIcon from "../assets/svgs/monthly-revenue-icon.svg";
 import clientsIcon from '../assets/svgs/avatar-icon.svg';
-import { getClients } from '../store/thunk/client.thunk';
-import { getCsvData, getEarnings } from '../store/thunk/earning.thunk';
+import { getEarnings } from '../store/thunk/earning.thunk';
 import { toast } from 'react-toastify';
 
 const Earnings = () => {
   const { userId } = useParams();
   const dispatch = useDispatch();
-  const { data, csvData } = useSelector((state) => state.earning);
+  const { data } = useSelector((state) => state.earning);
   const [selectedDate, setSelectedDate] = useState();
-  const [selectedData, setSelectedData] = useState(data?.data || []);
   const headers = [
     'Clients',
-    'Clients Email',
+    // 'Clients Email',
     'Last Date Updated',
     'Commission Earned',
     'Employee Share',
   ];
 
-  // useEffect(() => {
-  //   setSelectedData(csvData);
-  // }, [csvData]);
-
-  // console.log('data', data);
-  // console.log('selectedData', selectedData);
-
   useEffect(() => {
-    // dispatch(getClients());
     const params = ''
     dispatch(getEarnings({ userId, params }));
-    // dispatch(getCsvData(userId));
   }, []);
 
   const currentDate = new Date();
@@ -109,38 +98,10 @@ const Earnings = () => {
     return [formattedStartDate, formattedEndDate];
   }
 
-  const filteredData = (date) => {
-    if (!date) {
-      setSelectedData(data?.data);
-      return;
-    }
-    const selectedDate = new Date(date);
-    setSelectedData(
-      data?.data?.filter((item) => {
-        console.log('item[2]', item);
-        if (selectedDate.toDateString() == new Date(item[2]).toDateString()) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    );
-  };
-
-  const getTotalEarning = () => {
-    let total = 0;
-    data?.data.forEach((item) => {
-      total = total + Number(item[3].slice(2));
-    });
-    return `$ ${total}`;
-  };
-
   useEffect(() => {
     if (selectedDate) {
-      console.log('-------selected date: ', getDateRange(selectedDate));
       const datesArray = getDateRange(selectedDate);
       const params = `startDate=${datesArray[0]}&endDate=${datesArray[1]}`;
-      // filteredData(selectedDate);
       dispatch(getEarnings({ userId, params }));
     }
   }, [selectedDate]);
@@ -163,7 +124,7 @@ const Earnings = () => {
           <RevenueCard
             title='Total Revenue'
             revenue={
-              data.totalEarnings
+              data.totalEarnings?.toFixed(2)
               // getTotalEarning()
               // data?.totalEarning
               //   ? parseFloat(data.totalEarning).toFixed(2)
@@ -204,13 +165,13 @@ const Earnings = () => {
             return element[0];
           },
           (element) => {
+            return element[1];
+          },
+          (element) => {
             return element[2];
           },
           (element) => {
             return element[3];
-          },
-          (element) => {
-            return element[4];
           },
         ]}
       />
